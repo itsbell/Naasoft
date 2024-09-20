@@ -26,8 +26,6 @@ export class DeskForm extends CompositeWindow {
     }
 
     OnLoaded() {
-        window.top.sessionStorage.setItem("PageId", this.id);
-
         const applyBook = ApplyBook.GetInstance();
         const bookmarkCard = BookmarkCard.GetInstance();
         let index = applyBook.FindCurrentCard();

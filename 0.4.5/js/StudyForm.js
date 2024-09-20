@@ -4,6 +4,7 @@ import { ApplyBook } from "./Apply.js";
 import { StudyView } from "./StudyView.js";
 import { ProblemNavigator } from "./ProblemNavigator.js";
 import { IndexForm } from "./IndexForm.js";
+import { PlayShelf } from "./Play.js";
 
 export class StudyForm extends CompositeWindow {
     constructor(id) {
@@ -26,6 +27,13 @@ export class StudyForm extends CompositeWindow {
         const applyBook = ApplyBook.GetInstance();
         const applyCard = applyBook.GetAt(applyBook.current);
         const stepNumber = applyCard.stepNumber;
+
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+
+        console.log(playCase);
+        playCase.Reset();
+        console.log(playCase);
 
         let chapter = "";
         let index = DeskForm.GetInstance().Find("SIDEBAR");

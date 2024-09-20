@@ -82,7 +82,7 @@ export class BusinessObjects extends BusinessObject {
 
     Move(index) {
         this._current = index;
-        
+
         return this._current;
     }
 
@@ -99,5 +99,20 @@ export class BusinessObjects extends BusinessObject {
         this._current = -1;
 
         return -1;
+    }
+
+    Reset() {
+        let i = 0;
+        let businessObjects;
+
+        while (i < this._length) {
+            businessObjects = this._objects[i];
+            if (businessObjects instanceof BusinessObjects) {
+                businessObjects.Reset();
+            }
+            i++;
+        }
+        
+        this._current = -1;
     }
 }
