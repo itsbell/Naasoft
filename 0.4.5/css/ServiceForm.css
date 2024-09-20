@@ -1,0 +1,159 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Button.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Box.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 900px) / 2);
+}
+
+/* name */
+/*********************************************************************************************/
+.name {
+    margin-bottom: 25px;
+}
+
+.name-row>h1 {
+    margin-bottom: 0px;
+}
+
+/* service */
+/*********************************************************************************************/
+.service>h2{
+    margin-bottom: 0px;
+}
+
+.service>.big {
+    margin-bottom: 30px;
+}
+
+.service-item {
+    margin-top: 30px;
+}
+
+/* rule */
+/*********************************************************************************************/
+.rule {
+    margin-bottom: 0px;
+}
+
+.rule-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.rule-item>img {
+    width: 20px;
+    height: 20px;
+}
+
+.rule-item>p {
+    line-height: 20px;
+}
+
+/* benefit */
+/*********************************************************************************************/
+.benefit {
+    margin-bottom: 0px;
+}
+
+.benefit-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.benefit-item>img {
+    width: 20px;
+    height: 20px;
+}
+
+.benefit-item>p {
+    line-height: 20px;
+}
+
+/* book */
+/*********************************************************************************************/
+.book {
+    margin-bottom: 0px;
+}
+
+.book-images {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.book-images>img {
+    width: 100px;
+}
+
+.book-link {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.book-link>img {
+    width: 10px;
+    height: 10px;
+}
+
+/* start */
+/*********************************************************************************************/
+.start {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.start>p {
+    margin-bottom: 15px;
+}
+
+.startButton {
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1.5;
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+}
+
+.startButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+/* .apply-already {
+    font-size: 20px;
+    color: rgba(var(--text-sub-rgb), 1);
+} */

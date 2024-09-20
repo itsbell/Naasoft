@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+.footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: calc((100% - 700px) / 2);
+    padding-right: calc((100% - 700px) / 2);
+    background-color: rgba(var(--background-weak-rgb), 1);
+    color: rgba(var(--text-sub-rgb), 1);
+    font-size: 11px;
+}
+
+.footer-information {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.footer-contact {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.footer-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.footer-link {
+    cursor: pointer;
+}

@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 50px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* name */
+/*********************************************************************************************/
+.name {
+    margin-bottom: 50px;
+}
+
+
+.chapter {
+    margin-top: 20px;
+}
+
+.article {
+    margin-top: 20px;
+}
+
+.paragraph {
+    margin-top: 20px;
+}
+
+.paragraph>p {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+:root {
+    --background-rgb: 255, 255, 255;
+    --background-weak-rgb: 245, 245, 247;
+    --background-strong-rgb: 176, 176, 176;
+    --line-rgb: 220, 220, 220;
+    --line-sub-rgb: 196, 196, 196;
+    --text-rgb: 0, 0, 0;
+    --text-sub-rgb: 137, 136, 142;
+    --text-weak-rgb: 217, 239, 254;
+    --highlight-rgb: 3, 110, 227;
+    --highlight-weak-rgb: 178, 223, 252;
+    --highlight-strong-rgb: 24, 119, 242;
+    --danger-rgb: 253, 29, 29;
+    --danger-weak-rgb: 243, 107, 107;
+    --danger-strong-rgb: 186, 21, 21;
+    --various-red-rgb: 253, 29, 29;
+    --various-orange-rgb: 252, 175, 69;
+    --various-yellow-rgb: 255, 220, 128;
+    --various-green-rgb: 109, 201, 147;
+    --various-blue-rgb: 64, 93, 230;
+    --various-indigo-rgb: 91, 81, 216;
+    --various-purple-rgb: 131, 58, 180;
+    --scroll-rgb: 165, 165, 165;
+    --help-rgb: 255, 241, 205;
+    font-family: "Noto Sans KR", sans-serif;
+}

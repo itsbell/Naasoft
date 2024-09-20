@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Box.css";
+@import "./Button.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* mentee */
+/*********************************************************************************************/
+.mentee {
+    margin-bottom: 40px;
+}
+
+.menteeTable {
+    font-size: 16px;
+    border-spacing: 0 1em;
+    width: 700px;
+}
+
+.menteeTable td:last-child {
+    padding-right: 10px;
+}
+
+.menteeColumn {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border: 0px;
+    height: 34px;
+    vertical-align: middle;
+}
+
+.menteeTable .receiptButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.menteeTable .receiptButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+.menteeTable .viewButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.menteeTable .viewButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

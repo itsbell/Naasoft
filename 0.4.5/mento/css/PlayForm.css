@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+@import "./SideBar.css";
+@import "./IFrame.css";
+
+.waiting, .waiting * {
+    cursor: wait;
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+}

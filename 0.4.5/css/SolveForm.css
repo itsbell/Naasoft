@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./ProblemView.css";
+@import "./SolutionView.css";
+@import "./SolveGround.css";
+
+.waiting, .waiting * {
+    cursor: wait;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    position: relative;
+}
+
+*:focus {
+    outline: none;
+}
+
+section {
+    margin: 0;
+}
+
+
+/* sideMenu */
+/*********************************************************************************************/
+.sideMenu {
+    position: absolute;
+    width: 35px;
+    color: white;
+}
+
+.feedbackMenu {
+    font-size: 14px;
+    padding: 8px;
+    background-color: rgba(var(--highlight-rgb), 1);
+    border: 2px solid rgba(var(--highlight-rgb), 1);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-bottom: 3px;
+}
+
+.feedbackMenu:hover {
+    cursor: pointer;
+}
+
+.QNAMenu {
+    font-size: 14px;
+    padding: 8px;
+    background-color: rgba(var(--highlight-rgb), 1);
+    border: 2px solid rgba(var(--highlight-rgb), 1);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.QNAMenu:hover {
+    cursor: pointer;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: calc(100% - 20px);
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* problem */
+/*********************************************************************************************/
+.problem {
+    margin-bottom: 0px;
+}
+
+/* solution */
+/*********************************************************************************************/
+.solution {
+    flex: 1 1 auto;
+    height: 0;
+    margin-bottom: 0px;
+}

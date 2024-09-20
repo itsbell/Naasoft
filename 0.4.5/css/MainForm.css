@@ -1,0 +1,127 @@
+@charset "UTF-8";
+
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Footer.css";
+@import "./Button.css";
+@import "./Input.css";
+@import "./styles.css";
+
+body {
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-left: calc((100% - 720px) / 2);
+    margin-right: calc((100% - 720px) / 2);
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.logoSection {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0px;
+    margin-right: 20px;
+}
+
+.naa {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.slogan {
+    font-size: 27px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.tangram {
+    width: 270px;
+}
+
+/* 로그인 */
+.signIn {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.signIn .signInInput {
+    font-size: 16px;
+    width: 320px;
+    height: 50px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+.signIn .signInButton {
+    width: 100%;
+    height: 55px;
+    font-size: 16px;
+    padding: 15px;
+    border-radius: 0;
+    margin-bottom: 5px;
+}
+
+.signIn .errorMessage {
+    display: inline-block;
+    font-size: 12px;
+    color: #ff003e;
+    vertical-align: middle;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.signIn-anchorWrapper {
+    display: flex;
+    gap: 3px;
+
+    font-size: 14px;
+    color: rgba(var(--highlight-rgb), 1);
+}
+
+.signIn .atticButton {
+    width: 100%;
+    height: 55px;
+    font-size: 16px;
+    padding: 15px;
+    border-radius: 0;
+    margin-bottom: 5px;
+}
+
+/* signup */
+/*********************************************************************************************/
+.a {
+    font-size: 16px;
+}

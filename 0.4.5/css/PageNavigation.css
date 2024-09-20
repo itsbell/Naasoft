@@ -1,0 +1,92 @@
+/* PAGENAVIGATION */
+#PAGENAVIGATION {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+/** PAGENAVIGATION_PREVIOUSAREA */
+#PAGENAVIGATION_PREVIOUSAREA {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+}
+
+#PAGENAVIGATION_PREVIOUSAREA_PREVIOUS {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#PAGENAVIGATION_PREVIOUSAREA_PREVIOUS:hover {
+    cursor: pointer;
+}
+
+#PAGENAVIGATION_PREVIOUSAREA_PREVIOUS_IMG {
+    width: 100%;
+}
+
+/** PAGENAVIGATION_NUMBERAREA */
+#PAGENAVIGATION_NUMBERAREA {
+    display: flex;
+    flex-direction: row;
+    width: 242px;
+}
+
+#PAGENAVIGATION_NUMBERAREA>.unSelected {
+    padding: 2px 2px;
+    width: 20px;
+
+    font-size: 14px;
+    text-align: center;
+}
+
+#PAGENAVIGATION_NUMBERAREA>.unSelected:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#PAGENAVIGATION_NUMBERAREA>.selected {
+    padding: 2px 2px;
+    width: 20px;
+
+    font-size: 14px;
+    text-align: center;
+    color: rgba(var(--highlight-rgb), 1);
+    border-radius: 5px;
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+}
+
+#PAGENAVIGATION_NUMBERAREA>.selected:hover {
+    cursor: pointer;
+}
+
+/** PAGENAVIGATION_NEXTAREA */
+#PAGENAVIGATION_NEXTAREA {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+}
+
+#PAGENAVIGATION_NEXTAREA_NEXT {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#PAGENAVIGATION_NEXTAREA_NEXT:hover {
+    cursor: pointer;
+}
+
+#PAGENAVIGATION_NEXTAREA_NEXT_IMG {
+    width: 100%;
+}
+

@@ -1,0 +1,406 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Button.css";
+
+.sideBar {
+    left: -230px;
+    position: absolute;
+    font-size: 18px;
+    width: 230px;
+    height: 100vh;
+    background-color: rgba(var(--background-rgb), 1);
+    border-right: 1px solid rgba(var(--line-rgb), 1);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sideBar-show {
+    left: -230px;
+    animation-name: sideBar-show;
+    animation-fill-mode: forwards;
+    ;
+    animation-duration: 1s;
+}
+
+@keyframes sideBar-show {
+    from {}
+
+    to {
+        left: 0px;
+    }
+}
+
+.sideBar-hide {
+    left: 0px;
+    animation-name: sideBar-hide;
+    animation-fill-mode: forwards;
+    ;
+    animation-duration: 1s;
+}
+
+@keyframes sideBar-hide {
+    from {}
+
+    to {
+        left: -230px;
+    }
+}
+
+.sideBar-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sideBar-menu {
+    height: 100%;
+    overflow-y: auto;
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    /* Firefox */
+    /* scrollbar-width: none; */
+    /* IE 10+ */
+    /* -ms-overflow-style: none; */
+}
+
+.sideBar-menu::-webkit-scrollbar {
+    /* Chrome/Safari/Webkit */
+    width: 5px;
+}
+
+.sideBar-menu::-webkit-scrollbar-thumb {
+    background: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+.menu-switch,
+.menu-action,
+.menu-link {
+    position: relative;
+    color: rgba(var(--text-sub-rgb), 1);
+    padding: 8px 30px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.menu-switch:hover,
+.menu-action:hover,
+.menu-link:hover {
+    background-color: #e8f3ff;       
+}
+
+.menu-selected {
+    /* background-color: rgba(var(--background-weak-rgb), 1); */
+    color: rgba(var(--text-rgb), 1);
+    font-weight: bold;
+}
+
+.menu-selected:hover,
+.menu-selected:focus {
+    /* background-color: rgba(var(--background-weak-rgb), 1); */
+    font-weight: bold;
+}
+
+.sideBar-profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image {
+    width: 30px;
+}
+
+.profile-mentee {
+    margin-left: 5px;
+}
+
+.profile-mentee>span {
+    font-size: 14px;
+}
+
+.sideBar-top {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding: 30px 15px;
+    cursor: pointer;
+}
+
+.top-image {
+    width: 40px;
+}
+
+.top-name {
+    font-weight: bold;
+    font-size: 27px;
+    line-height: 1;
+    margin-left: 3px;
+    /* align-self: flex-end; */
+    color: rgba(var(--text-rgb), 1);
+}
+
+.sideBar-fold {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translate(100%, -50%);
+    width: 10px;
+    height: 200px;
+    background-color: rgba(var(--highlight-rgb), 1);
+    border: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sideBar-fold:hover {
+    background-color: rgba(var(--highlight-strong-rgb), 1);
+}
+
+.fold-unfold {
+    width: 0;
+    height: 0;
+
+    animation-name: fold-unfold;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes fold-unfold {
+    from {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid rgba(var(--background-rgb), 1);
+    }
+
+    to {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid rgba(var(--background-rgb), 1);
+    }
+}
+
+.fold-fold {
+    width: 0;
+    height: 0;
+
+    animation-name: fold-fold;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes fold-fold {
+    from {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid rgba(var(--background-rgb), 1);
+    }
+
+    to {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid rgba(var(--background-rgb), 1);
+    }
+}
+
+.sideBar-control {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: flex-end; */
+    height: 30px;
+    padding-left: 25px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px ridge rgba(var(--line-rgb), 1);
+    border-bottom: 1px ridge rgba(var(--line-rgb), 1);
+}
+
+.control-button {
+    cursor: pointer;
+    border: 0;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-button>img {
+    width: 100%;
+    height: 100%;
+}
+
+.control-button:active>img {
+    width: 80%;
+    height: 80%;
+}
+
+.sideBar-menu-edge {
+    overflow-y: auto;
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: 1px ridge rgba(var(--line-rgb), 1);
+    /* Firefox */
+    /* scrollbar-width: none; */
+    /* IE 10+ */
+    /* -ms-overflow-style: none; */
+}
+
+.sideBar-menu-edge::-webkit-scrollbar {
+    /* Chrome/Safari/Webkit */
+    width: 5px;
+}
+
+.sideBar-menu-edge::-webkit-scrollbar-thumb {
+    background: rgba(var(--background-weak-rgb), 1);
+    border-radius: 10px;
+}
+
+.sideBar-location {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+    height: 30px;
+    padding-left: 30px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px ridge rgba(var(--line-rgb), 1);
+}
+
+.location-image {
+    width: 15px;
+    height: 15px;
+}
+
+.location-text {
+    /* color: rgba(var(--text-sub-rgb), 1); */
+    font-size: 14px;
+    line-height: 30px;
+}
+
+.menu-dropdown {
+    position: relative;
+    padding: 15px 30px;
+    cursor: pointer;
+    font-size: 0;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.dropdown-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 
+.menu-dropdown:hover .dropdown-wrapper {
+    border-bottom: 1px solid rgba(var(--line-sub-rgb), 1);
+} */
+
+/* .dropdown-mark1 {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(var(--text-sub-rgb), 1);
+    margin-right: 5px;
+}
+
+.dropdown-mark2 {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(var(--text-sub-rgb), 1);
+    border-radius: 50%;
+    margin-right: 5px;
+} */
+
+.dropdown-text {
+    /* flex: 1 1 auto; */
+    font-size: 16px;
+    color: rgba(var(--text-sub-rgb), 1);
+    /* margin-left: 10px; */
+}
+
+.dropdown-fold {
+    background-image: url("../../assets/fold-gray.png");
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown-unfold {
+    background-image: url("../../assets/unfold-gray.png");
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown-submenu {
+    list-style: none;
+    margin-top: 10px;
+    margin-bottom: 0;
+    margin-left: 5px;
+    padding-left: 10px;
+    border-left: 3px solid rgba(var(--highlight-rgb), 1);
+}
+
+.dropdown-submenu>.menu-switch,
+.dropdown-submenu>.menu-dropdown,
+.dropdown-submenu>.menu-button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right: 0px;
+}
+
+.dropdown-submenu>.menu-switch {
+    font-size: 16px;
+}
+
+.menuButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    width: fit-content;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menuButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

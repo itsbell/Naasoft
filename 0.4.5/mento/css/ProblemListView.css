@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+.problemListView {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.problemListView-list {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    animation-name: appearAnimation;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes appearAnimation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.problemListView-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    gap: 5px;
+}
+
+.problemListView-separator {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.problemListView-separator:before {
+    position: absolute;
+    left: 5%;
+    top: 0%;
+    width: 10px;
+    height: 15px;
+    content: '';
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 50%, 0% 100%);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+.problemListView-item>p{
+    padding-left: 10%;
+}
+
+.problemListView-control {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-left: 10%;
+}
+
+.playButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.playButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

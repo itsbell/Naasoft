@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Button.css";
+@import "./Tags.css";
+@import "./Input.css";
+@import "./Text.css";
+
+.waiting * {
+    cursor: wait;
+}
+
+body {
+    margin: 0;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-left: calc((100% - 250px) / 2);
+    margin-right: calc((100% - 250px) / 2);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* LOGO */
+/*********************************************************************************************/
+#LOGOSECTION {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 24px;
+}
+
+#LOGOSECTION:hover {
+    cursor: pointer;
+}
+
+#LOGO {
+    margin-right: 10px;
+    height: 48px;
+}
+
+#BRAND {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* MASK */
+/*********************************************************************************************/
+#SIGNUPMASK {
+    margin-bottom: 10px;
+}
+
+#SIGNUPMASK input {
+    font-family: "Noto Sans KR", sans-serif;
+    border: 1px solid rgba(var(--line-rgb), 1);
+    background-color: rgba(var(--background-weak-rgb), 1);
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 40px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#EMAILADDRESSROW {
+    display: flex;
+    flex-direction: row;
+}
+
+#EMAILADDRESSINPUT {
+    flex: 0 0 auto;
+    margin-right: 1em;
+}
+
+#AUTHENTICATECODEBUTTON {
+    flex: 0 0 auto;
+    cursor: pointer;
+    border: 0;
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+    font-size: 16px;
+    font-family: "Noto Sans KR", sans-serif;
+    height: 40px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    line-height: 16px;
+}
+
+#AUTHENTICATECODEBUTTON:hover:enabled {
+    background-color: rgba(var(--highlight-strong-rgb), 1);
+}
+
+#EMAILERRORMESSAGE {
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -.5px;
+    color: #ff003e;
+    vertical-align: middle;
+    padding-left: 5px;
+}
+
+#PASSWORDERRORMESSAGE.errorMessage {
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -.5px;
+    color: #ff003e;
+    vertical-align: middle;
+    padding-left: 5px;
+}
+
+#PASSWORDERRORMESSAGE.warningMessage {
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -.5px;
+    color: #ffa41c;
+    vertical-align: middle;
+    padding-left: 5px;
+}
+
+#SIGNUPBUTTON {
+    width: 100%;
+    font-size: 16px;
+    font-family: "Noto Sans KR", sans-serif;
+    line-height: 16px;
+    padding: 12px;
+    border-radius: 5px;
+    height: 40px;
+    cursor: pointer;
+    border: 0;
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+    margin-bottom: 10px;
+}
+
+#SIGNUPBUTTON:hover:enabled {
+    background-color: rgba(var(--highlight-strong-rgb), 1);
+}
+
+/* AGREE */
+/*********************************************************************************************/
+#AGREE {
+    margin-bottom: 0px;
+}
+
+#AGREE>p {
+    font-size: 12px;
+    color: rgba(var(--text-sub-rgb), 1);
+}
+
+.agree-link {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}

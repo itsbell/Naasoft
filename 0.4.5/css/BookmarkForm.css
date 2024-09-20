@@ -1,0 +1,131 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Box.css";
+@import "./Button.css";
+@import "./PageNavigation.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* TITLE */
+/*********************************************************************************************/
+h1 {
+    margin-bottom: 20px;
+    font-size: 36px;
+}
+
+
+/* BOOKMARKTABLE */
+/*********************************************************************************************/
+#BOOKMARKTABLEWRAPPER {
+    padding: 5px;
+    border-top: 1px solid rgba(var(--text-sub-rgb), 1);
+    border-bottom: 1px solid rgba(var(--text-sub-rgb), 1);
+    /* border-radius: 10px; */
+    margin-bottom: 20px;
+}
+
+#BOOKMARKTABLE {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#BOOKMARKTABLE>tr {
+    margin: 5px;
+}
+
+#BOOKMARKTABLE>tr>td {
+    padding: 5px 10px;
+    font-size: 16px;
+    line-height: 1.67;
+}
+
+#BOOKMARKTABLE>tr>td:nth-child(1) {
+    width: 90px;
+    text-align: center;
+}
+
+#BOOKMARKTABLE>tr>td:nth-child(2) {
+    width: 510px;
+    padding-left: 10px;
+}
+
+#BOOKMARKTABLE>tr>td:nth-child(2):hover {
+    cursor: pointer;
+}
+
+/* WORKTABLE */
+/*********************************************************************************************/
+#WORKTABLEWRAPPER {
+    padding: 5px;
+    border-top: 1px solid rgba(var(--text-sub-rgb), 1);
+    border-bottom: 1px solid rgba(var(--text-sub-rgb), 1);
+    /* border-radius: 10px; */
+}
+
+#WORKTABLE {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#WORKTABLE>tr {
+    border-bottom: 1px solid #f2f2f2;
+}
+
+#WORKTABLE>tr.opacity {
+    opacity: 50%;
+}
+
+/** 헤더 */
+#WORKTABLE>tr:nth-child(1) {
+    border: 0;
+}
+
+/** 마지막 줄 */
+#WORKTABLE>tr:nth-last-child(1) {
+    border: 0;
+}
+
+#WORKTABLE>tr>td {
+    padding: 5px 10px;
+    line-height: 1.67;
+}
+
+#WORKTABLE>tr>td:nth-child(1) {
+    width: 90px;
+    font-size: 14px;
+    text-align: center;
+}
+
+#WORKTABLE>tr>td:nth-child(2) {
+    width: 510px;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+#WORKTABLE>tr>td:nth-child(2):hover {
+    cursor: pointer;
+}
+
+/* PAGENAVIGATION */
+/*********************************************************************************************/
+#PAGENAVIGATIONWRAPPER{
+    margin-top: 10px;
+}

@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+@import "./Tags.css";
+@import "./Text.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* name */
+/*********************************************************************************************/
+.name {
+    margin-bottom: 25px;
+}
+
+/* content */
+/*********************************************************************************************/

@@ -1,0 +1,185 @@
+@charset "UTF-8";
+
+#QNAVIEW {
+    border-radius: 10px;
+    border: 1px solid rgba(var(--text-sub-rgb), 1);
+}
+
+.QNAView-show-620 {
+    width: 620px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--text-sub-rgb), 1);
+}
+
+.QNAView-show-310 {
+    width: 310px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--text-sub-rgb), 1);
+}
+.QNAView-hide {
+    display: none;
+}
+
+/**head*/
+
+.QNAView-head {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.QNAView-head-sectionName {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.QNAView-head-addButton {
+    margin-left: auto;
+    width: 30px;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    font-size : 25px;
+    font-family: "Noto Sans KR", sans-serif;
+    color: rgba(var(--highlight-rgb), 1);
+}
+
+.QNAView-head-submitButton {
+    margin-left: auto;
+    width: 30px;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    font-size : 14px;
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: 400;
+    color: rgba(var(--highlight-rgb), 1);
+}
+
+.QNAView-head-addButton:hover {
+    cursor: pointer;
+}
+
+.QNAView-head-submitButton {
+    cursor: pointer;
+}   
+
+/**body*/
+
+.QNAView-body {
+    overflow-y: auto;
+    display: flex;
+    padding: 10px;
+    flex-grow: 1;
+    width: calc(100% - 20px);
+}
+
+.QNAView-body::-webkit-scrollbar {
+    /* Chrome/Safari/Webkit */
+    width: 5px;
+}
+
+.QNAView-body::-webkit-scrollbar-thumb {
+    background: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+.QNAView-body-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.QNAView-body-list-item {
+    padding: 10px;
+    border-bottom: 1px solid rgba(var(--text-sub-rgb), 1);
+}
+
+.QNAView-body-list-item-head {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.QNAView-body-list-item-body {
+    font-size: 15px;
+}
+
+.QNAView-body-edit {
+    width: 100%;
+}
+
+.QNAView-body-edit-textArea {
+    width: 100%;
+    height: 25%;
+
+    resize: none;
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    border: 0;
+    color: #333333;
+}
+
+.QNAView-edit {
+    flex: 0 1 40px;
+    height: 40px;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 25px;
+    background-color: rgba(var(--background-strong-rgb), 0.3);
+}
+
+.edit-textArea {
+    flex: 1 1 auto;
+    height: 24px;
+    margin: 8px;
+    padding-left: 10px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: transparent;
+    font-size: 15px;
+    border: 0;
+    resize: none;
+}
+
+.edit-textArea::-webkit-scrollbar {
+    /* Chrome/Safari/Webkit */
+    width: 0px;
+    background: transparent;
+}
+
+.edit-textArea:focus {
+    outline: none;
+}
+
+.sendButton {
+    flex: 0 1 32px;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    padding: 4px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sendButton>img {
+    width: 100%;
+    height: 100%;
+}
+
+.sendButton:active>img {
+    width: 80%;
+    height: 80%;
+}

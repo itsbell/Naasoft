@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+.underline {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: rgba(var(--highlight-rgb), 1);
+    text-decoration-thickness: 7px;
+    text-underline-offset: 10px;
+    
+}
+
+.boldColor {
+    font-style: normal;
+    font-weight: bold;
+    color: rgb(var(--highlight-rgb));
+}
+
+.bold {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.color {
+    font-style: normal;
+    color: rgb(var(--highlight-rgb));
+}
+
+.infoColor {
+    font-style: normal;
+    color: rgb(var(--text-sub-rgb));
+}
+
+.big {
+    font-size: 20px;
+    font-style: normal;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}

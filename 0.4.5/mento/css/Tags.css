@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-top:0px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-top:0px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top:0px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.67;
+    margin: 0;
+}
+
+pre {
+    font-size: 14px;
+    line-height: 1.43;
+    margin:0;
+    font-family: "Noto Sans KR", sans-serif;
+} 
+
+section {
+    margin-bottom: 80px;
+}
+
+a {
+    cursor:pointer;
+    text-decoration: none;
+    color: rgb(var(--highlight-rgb));
+}
+
+a:visited {
+    color: rgb(var(--highlight-rgb));
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    height: 1px;
+    background-color: rgba(var(--line-rgb), 1);
+}

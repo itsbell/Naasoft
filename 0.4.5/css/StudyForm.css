@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+@import "./Tags.css";
+@import "./Text.css";
+@import "./StudyView.css";
+@import "./ProblemNavigator.css";
+
+body {
+    margin: 0;
+}
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* study */
+/*********************************************************************************************/
+.study {
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-bottom: 0px;
+}

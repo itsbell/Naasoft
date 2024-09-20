@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+@import "./Tags.css";
+@import "./Text.css";
+@import "./SideBar.css";
+@import "./IFrame.css";
+@import "./Help.css";
+
+.waiting * {
+    cursor: wait;
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: rgba(var(--background-rgb), 1);
+}

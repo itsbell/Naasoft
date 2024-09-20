@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Button.css";
+
+.studyView {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.menu {
+    display: flex;
+    justify-content: right;
+}
+
+.bookmark {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.bookmark:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+.studyView-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    animation-name: appearAnimation;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes appearAnimation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.studyView-separator {
+    position: relative;
+    height: 5px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.studyView-separator:before {
+    position: absolute;
+    left: 5%;
+    top: 0%;
+    width: 10px;
+    height: 15px;
+    content: '';
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 50%, 0% 100%);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+/* .studyView-separatorB {
+    position: relative;
+    height: 5px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.studyView-separatorB:before {
+    position: absolute;
+    left: 5%;
+    top: 0%;
+    width: 10px;
+    height: 15px;
+    content: '';
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 50%, 0% 100%);
+    background-color: rgba(var(--various-green-rgb), 1);
+}
+
+.studyView-separatorC {
+    position: relative;
+    height: 5px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.studyView-separatorC:before {
+    position: absolute;
+    left: 5%;
+    top: 0%;
+    width: 10px;
+    height: 15px;
+    content: '';
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 50%, 0% 100%);
+    background-color: rgba(var(--various-blue-rgb), 1);
+} */
+
+.studyView-item {
+    /* height: 30px; */
+    border-radius: 10px;
+    box-sizing: border-box;
+    line-height: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.studyView-number {
+    flex: 0 1 auto;
+    width: 10%;
+    text-align: right;
+    font-weight: bold;
+}
+
+.studyView-content {
+    flex: 1 1 auto;
+    width: 90%;
+    text-align: left;
+    padding: 0px 20px;
+}

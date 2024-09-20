@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+#PROBLEMVIEW {
+    position: relative;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid rgba(var(--text-sub-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    z-index: 99;
+}
+
+/**head */
+.problemView-head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.problemView-head-sectionName {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.problemView-title {
+    padding-left: 10px;
+    color: rgba(var(--text-sub-rgb), 1);
+    font-size: 15px;
+    line-height: 1;
+}
+
+.problemView-fold {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+}
+
+.foldButton {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+    border: 0;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foldButton>img {
+    width: 100%;
+    height: 100%;
+}
+
+.foldButton:active>img {
+    width: 80%;
+    height: 80%;
+}
+
+.problemView-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.problemView-content {
+    padding-top: 5px;
+    font-size: 15px;
+    line-height: 1.5;
+}

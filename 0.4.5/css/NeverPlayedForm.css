@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+@import "./Tags.css";
+@import "./Text.css";
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    height: 100%;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* comment */
+/*********************************************************************************************/
+.comment {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.comment-square {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(var(--background-rgb), 1);
+    width: 375px;
+    height: 150px;
+    box-sizing: border-box;
+    padding: 20px 20px;
+    margin-bottom: 30px;
+    opacity: 0;
+}
+
+.comment-square:nth-child(1) {
+    animation-name: squareAnimation;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes squareAnimation {
+    from {
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.square-title {
+    color: rgba(var(--highlight-rgb), 1);
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.square-subTitle {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.square-title>.square-subTitle {
+    margin-top: 5px;
+}
+
+.square-content {
+    margin-top: 5px;
+    color: rgba(var(--text-sub-rgb), 1);
+    font-size: 14px;
+}
+
+.square-buttonWrapper {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.addButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.addButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

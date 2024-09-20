@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+.problemNavigator {
+    margin-left: 90px;
+    width: 300px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    /* border: 1px solid rgba(var(--line-rgb), 1); */
+    /* background-color: rgba(var(--background-weak-rgb), 1); */
+    /* padding: 20px; */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation-name: appearAnimation;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+}
+
+@keyframes appearAnimation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.problemNavigator-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.playButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.playButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+    flex: 1 1 auto;
+}
+
+/* */
+/*********************************************************************************************/
+
+.subjectDiv {
+    margin-bottom:5px;
+}
+
+.contentDiv {
+    padding-left: 25px;
+}
+
+.row {
+    margin-bottom: 20px;
+}

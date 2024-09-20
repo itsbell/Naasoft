@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Box.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* intro */
+/*********************************************************************************************/
+.intro {
+    margin-bottom: 40px;
+}
+
+/* ability */
+/*********************************************************************************************/
+.ability {
+    margin-bottom: 40px;
+}
+
+.item-head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-head>img {
+    width: 20px;
+    height: 20px;
+}

@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+
+.radioControl {}
+
+.radio-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]+label:before {
+    content: "";
+    /* create custom radiobutton appearance */
+    display: inline-block;
+    box-sizing: border-box;
+    width: 15px;
+    height: 15px;
+    padding: 2px;
+    margin-right: 3px;
+    /* background-color only for content */
+    background-clip: content-box;
+    border: 2px solid rgba(var(--line-rgb), 1);
+    border-radius: 50%;
+}
+
+/* appearance for checked radiobutton */
+input[type="radio"]:checked+label:before {
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+/* optional styles, I'm using this for centering radiobuttons */
+label {
+    display: flex;
+    align-items: center;
+}

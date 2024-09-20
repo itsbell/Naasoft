@@ -1,0 +1,114 @@
+@charset "UTF-8";
+
+.answerEditor {
+    margin-top: 10px;
+}
+
+.answerEditor-addWrapper {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.addButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    width: fit-content;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.addButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+.answerEditor-textWrapper {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100px; /* 10 + 40 + 10 + 30 + 10*/
+    padding: 10px;
+    border: 1px solid rgba(var(--line-rgb), 1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.answerEditor-textArea {
+    height: 30px;
+    padding: 0;
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: transparent;
+    font-size: 15px;
+    resize: none;
+    overflow: hidden;
+    border: none;
+}
+
+.answerEditor-textArea:focus {
+    outline: none;
+}
+
+.answerEditor-textArea::-webkit-resizer {
+    display: none;
+}
+
+.answerEditor-control {
+    flex: 0 1 auto;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.control-buttonWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.cancelButton {
+    background-color: transparent;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancelButton>img {
+    width: 100%;
+    height: 100%;
+}
+
+.submitButton {
+    background-color: transparent;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    cursor: pointer;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submitButton>img {
+    width: 100%;
+    height: 100%;
+}

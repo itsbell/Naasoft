@@ -1,0 +1,212 @@
+@charset "UTF-8";
+
+@import "./styles.css";
+@import "./Tags.css";
+@import "./Text.css";
+@import "./Box.css";
+@import "./Button.css";
+
+body::-webkit-scrollbar {
+    width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--background-strong-rgb), 1);
+    border-radius: 10px;
+}
+
+/* container */
+/*********************************************************************************************/
+.container {
+    margin-top: 40px;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+}
+
+/* ability */
+/*********************************************************************************************/
+.ability {
+    margin-bottom: 40px;
+}
+
+/* .ability-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
+.ability-graph {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.graph-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.item-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.item-bar {
+    width: 15px;
+    height: 100px;
+    position: relative;
+}
+
+.bar-fill {
+    width: 15px;
+    height: 0px;
+    text-align: center;
+    color: rgba(var(--background-rgb), 1);
+    position: absolute;
+    bottom: 0px;
+    animation: filling 1s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes filling {
+    0% {
+        max-height: 0;
+    }
+
+    100% {
+        max-height: 100%;
+    }
+}
+
+.item-bar:first-child>.bar-fill {
+    background-color: rgba(var(--various-yellow-rgb), 1);
+}
+
+.item-bar:nth-child(2)>.bar-fill {
+    background-color: rgba(var(--various-green-rgb), 1);
+}
+
+.item-bar:last-child>.bar-fill {
+    background-color: rgba(var(--various-blue-rgb), 1);
+}
+
+.item-bar>.bar-fill.none {
+    background-color: rgba(var(--background-weak-rgb), 1);
+}
+
+.item-name {
+    width: 100px;
+    text-wrap: wrap;
+    font-size: 13px;
+    text-align: center;
+}
+
+.graph-legend {
+    width: fit-content;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid rgba(var(--line-rgb), 1);
+}
+
+.legend-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+}
+
+.legend-mark {
+    width: 10px;
+    height: 10px;
+}
+
+.legend-box:first-child>.legend-mark {
+    background-color: rgba(var(--various-yellow-rgb), 1);
+}
+
+.legend-box:nth-child(2)>.legend-mark {
+    background-color: rgba(var(--various-green-rgb), 1);
+}
+
+.legend-box:last-child>.legend-mark {
+    background-color: rgba(var(--various-blue-rgb), 1);
+}
+
+.legend-name {
+    font-size: 13px;
+}
+
+/* stepTable */
+/*********************************************************************************************/
+.stepTable {
+    font-size: 16px;
+    border-spacing: 0 1em;
+    width: 700px;
+}
+
+.stepTable td:last-child {
+    padding-right: 10px;
+}
+
+.stepColumn {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border: 0px;
+    height: 34px;
+    vertical-align: middle;
+}
+
+.stepTable .applyButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.stepTable .applyButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}
+
+.stepTable .applyButton:disabled {
+    cursor: not-allowed;
+    color: rgba(var(--highlight-weak-rgb), 1);
+    border: 1px solid rgba(var(--highlight-weak-rgb), 1);
+}
+
+.stepTable .completeButton {
+    cursor: pointer;
+    font-weight: bold;
+    border: 0;
+    border-radius: 20px;
+    color: rgba(var(--highlight-rgb), 1);
+    background-color: rgba(var(--background-rgb), 1);
+    border: 1px solid rgba(var(--highlight-rgb), 1);
+    width: fit-content;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.stepTable .completeButton:hover {
+    color: rgba(var(--background-rgb), 1);
+    background-color: rgba(var(--highlight-rgb), 1);
+}

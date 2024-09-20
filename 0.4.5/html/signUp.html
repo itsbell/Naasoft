@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="chan" />
+    <title>계정 만들기</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+
+    <link href="../css/SignUpForm.css" rel="stylesheet" />
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+
+<body id="SIGNUPFORM">
+    <main class="container">
+
+        <sesction id="LOGOSECTION">
+
+            <img id="LOGO" src="../assets/logo.png"></img>
+            <p id="BRAND">나아 소프트북</p>
+
+        </sesction>
+
+        <section id="SIGNUPMASK" class="mask">
+
+            <input id="NAME" type="text" placeholder="성명" autocomplete="off">
+            <div id="EMAILADDRESSROW">
+                <input id="EMAILADDRESSINPUT" type="text" placeholder="이메일주소" autocomplete="off">
+                <button id="AUTHENTICATECODEBUTTON">인증코드 발송</button>
+            </div>
+            <input id="AUTHENTICATECODEINPUT" type="text" placeholder="인증코드를 입력하세요." autocomplete="off">
+            <input id="PASSWORDINPUT" type="password" placeholder="비밀번호">
+            <input id="PASSWORDCHECKINPUT" type="password" placeholder="비밀번호 확인">
+            <button id="SIGNUPBUTTON">계정 만들기</button>
+
+        </section>
+
+        <section id="AGREE">
+
+            <p>회원가입 시 나아소프트의 <span id="TERMS" class="agree-link">이용약관</span>과 <span id="PRIVACY" class="agree-link">개인정보처리방침</span>에 동의하게 됩니다.</p>
+
+        </section>
+
+    </main>
+    <script src="../js/SignUpApp.js" type="module"></script>
+
+</body>
+
+</html>
