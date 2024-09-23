@@ -13,6 +13,7 @@ import { SolutionView } from "./SolutionView.js";
 import { FeedbackView } from "./FeedbackView.js";
 import { QnaView } from "./QnaView.js";
 import { PlayForm } from "./PlayForm.js";
+import { IndexForm } from "../../js/IndexForm.js";
 
 export class SolveForm extends CompositeWindow {
     constructor(id) {
@@ -27,10 +28,10 @@ export class SolveForm extends CompositeWindow {
     }
 
     static GetInstance() {
-        if (window.top.forms["SOLVEFORM"] === undefined) {
-            window.top.forms["SOLVEFORM"] = new SolveForm("SOLVEFORM");
+        if (window.top.forms["MENTOSOLVEFORM"] === undefined) {
+            window.top.forms["MENTOSOLVEFORM"] = new SolveForm("MENTOSOLVEFORM");
         }
-        return window.top.forms["SOLVEFORM"];
+        return window.top.forms["MENTOSOLVEFORM"];
     }
 
     async SubmitFeedback(evaluate, content) {
@@ -368,5 +369,7 @@ export class SolveForm extends CompositeWindow {
             bookmarkCard.type = "";
             await indexedDB.Put("BookmarkCard", bookmarkCard);
         }
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 }

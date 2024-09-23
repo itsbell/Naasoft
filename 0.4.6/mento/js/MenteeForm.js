@@ -100,6 +100,9 @@ export class MenteeForm extends CompositeWindow {
             }
             i++;
         }
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnViewButtonClicked(event) {

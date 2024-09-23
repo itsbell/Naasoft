@@ -4,7 +4,9 @@ import { ApplyBook } from "./Apply.js";
 import { StudyView } from "./StudyView.js";
 import { ProblemNavigator } from "./ProblemNavigator.js";
 import { IndexForm } from "./IndexForm.js";
-import { PlayShelf, PlayCase } from "./Play.js";
+import { PlayShelf } from "./Play.js";
+import { IndexedDB } from "./IndexedDB.js";
+import { BookmarkCard } from "./Bookmark.js";
 
 export class StudyForm extends CompositeWindow {
     constructor(id) {
@@ -23,23 +25,24 @@ export class StudyForm extends CompositeWindow {
         return window.top.forms["STUDYFORM"];
     }
 
-    OnLoaded() {
+    async OnLoaded() {
         const applyBook = ApplyBook.GetInstance();
         const applyCard = applyBook.GetAt(applyBook.current);
         const stepNumber = applyCard.stepNumber;
 
         const playShelf = PlayShelf.GetInstance();
         const playCase = playShelf.GetAt(playShelf.current);
-
-        // console.log(playCase);
         playCase.Reset();
-        // console.log(playCase);
 
         let chapter = "";
+        let chapterNumber = 0;
         let index = DeskForm.GetInstance().Find("SIDEBAR");
         if (index != -1) {
             const sideBar = DeskForm.GetInstance().GetAt(index);
             chapter = sideBar.GetSelectedMenuItemText();
+            if (chapter != '살펴보기') {
+                chapterNumber = parseInt(chapter.replace(/[^0-9]/g, ""));
+            }
         }
 
         const studyView = new StudyView("STUDYVIEW");
@@ -48,6 +51,13 @@ export class StudyForm extends CompositeWindow {
 
         const problemNavigator = new ProblemNavigator("PROBLEMNAVIGATOR", stepNumber, chapter);
         this.Add(problemNavigator);
+
+        const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+
+        const bookmarkCard = BookmarkCard.GetInstance();
+        bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", applyCard.courseName, applyCard.stepNumber, chapterNumber, 0, 0);
+        await indexedDB.Put("BookmarkCard", bookmarkCard);
 
         const indexForm = IndexForm.GetInstance();
         indexForm.Notify();

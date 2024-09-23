@@ -93,7 +93,14 @@ export class AtticForm extends CompositeWindow {
         else if (bookmarkCard.grandChildForm === "LEAVEFORM") {
             text = "퇴거";
         }
-        sideBar.ClickMenuItemByText(text);
+
+        if (text != "퇴거") {
+            sideBar.ClickMenuItemByText(text);
+        }
+        else {
+            sideBar.ClickEdgeMenuItemByText(text);
+        }
+
         this.Add(sideBar);
 
         // 4. SideBar를 보여준다.
@@ -122,15 +129,15 @@ export class AtticForm extends CompositeWindow {
         const menteeCard = MenteeCard.GetInstance();
         const emailAddress = menteeCard.emailAddress;
         const time = menteeCard.time;
-        
+
         const applyBook = ApplyBook.GetInstance();
         const integrateApplyBook = applyBook.GetIntegrateObject(time);
         const applies = JSON.stringify(integrateApplyBook);
-        
+
         const playShelf = PlayShelf.GetInstance();
         const integratePlayShelf = playShelf.GetMenteeIntegrateObject(time);
         const solutionsAndQuestions = JSON.stringify(integratePlayShelf);
-        
+
         const bookmarkCard = BookmarkCard.GetInstance();
         const integrateBookmarkCard = bookmarkCard.GetIntegrateObject();
         const bookmark = JSON.stringify(integrateBookmarkCard);

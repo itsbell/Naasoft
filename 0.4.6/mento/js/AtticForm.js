@@ -11,6 +11,7 @@ import { IndexedDB } from "../../js/IndexedDB.js";
 import { SideBar } from "../../js/SideBar.js";
 import { IndexForm } from "../../js/IndexForm.js";
 import { FrameController } from "../../js/FrameController.js";
+import { PhpRequestor } from "../../js/PhpRequestor.js";
 
 export class AtticForm extends CompositeWindow {
     constructor(id) {
@@ -30,18 +31,23 @@ export class AtticForm extends CompositeWindow {
     }
 
     OnLoaded() {
-        window.top.sessionStorage.setItem("PageId", this.id);
-
         window.top.document.title = "멘토";
 
         // 5. 사이드바를 만든다.
         const sideBar = new SideBar("SIDEBAR");
         sideBar.AddTop("멘토", "MENTOATTICFORM", "../../assets/logo.png");
         sideBar.AddControl("SIGNOUTBUTTON", "../../assets/signOut.png", this.OnSignOutButtonClicked.bind(this), "로그아웃");
-        sideBar.AddSwitchMenu("책갈피", "BOOKMARKFORM", "./bookmark.html");
+        sideBar.AddSwitchMenu("책갈피", "MENTOBOOKMARKFORM", "./bookmark.html");
         sideBar.AddSwitchMenu("멘티", "MENTEEFORM", "./mentee.html");
         sideBar.AddLocation("다락방/멘토", "../../assets/logo.png");
-         sideBar.ClickMenuItem(0);
+
+        let text = "책갈피";
+        const bookmarkCard = BookmarkCard.GetInstance();
+        if (bookmarkCard.length > 0 && bookmarkCard.grandChildForm === "MENTEEFORM") {
+            text = "멘티";
+        }
+        sideBar.ClickMenuItemByText(text);
+
         this.Add(sideBar);
 
         setTimeout(function () {
@@ -57,14 +63,14 @@ export class AtticForm extends CompositeWindow {
         const mentoCard = MentoCard.GetInstance();
         const emailAddress = mentoCard.emailAddress;
         const time = mentoCard.time;
-        
+
         const playShelf = PlayShelf.GetInstance();
         const integratePlayShelf = playShelf.GetMentoIntegrateObject(time);
         const feedbacksAndAnswers = JSON.stringify(integratePlayShelf);
-        
+
         // 서버에 데이터 결합을 요청한다.
         const requestor = new PhpRequestor();
-        await requestor.Post("../php/IntegrateMento.php",
+        await requestor.Post("../../php/IntegrateMento.php",
             "emailAddress=" + emailAddress +
             "&playShelf=" + feedbacksAndAnswers);
 

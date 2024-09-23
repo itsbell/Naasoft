@@ -14,6 +14,12 @@ export class PlayForm extends CompositeWindow {
         this.element.logicalObject = this;
 
         this.element.addEventListener("load", this.OnLoaded.bind(this));
+
+        this._frame = null;
+    }
+
+    get frame() {
+        return this._frame;
     }
 
     static GetInstance() {
@@ -91,7 +97,7 @@ export class PlayForm extends CompositeWindow {
                 j = 0;
                 while (j < solutionListLength) {
                     solution = solutionList.GetAt(j);
-                    sideBar.AddSwitchSubmenu(submenuId, "풀이 " + solution.number, "SOLVEFORM", "./solve.html", solution);
+                    sideBar.AddSwitchSubmenu(submenuId, "풀이 " + solution.number, "MENTOSOLVEFORM", "./solve.html", solution);
                     j++;
                 }
 
@@ -171,7 +177,7 @@ export class PlayForm extends CompositeWindow {
 
         bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
         await indexedDB.Put("BookmarkCard", bookmarkCard);
-        
+
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
         frameController.Change("MENTODESKFORM");

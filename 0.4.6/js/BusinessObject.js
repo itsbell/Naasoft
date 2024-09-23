@@ -111,10 +111,9 @@ export class BusinessObjects extends BusinessObject {
 
         while (i < this._length) {
             businessObjects = this._objects[i];
-            console.log(businessObjects);
-            // if (businessObjects instanceof BusinessObjects) {
-            //     businessObjects.Reset();
-            // }
+            if (businessObjects instanceof BusinessObjects) {
+                businessObjects.Reset();
+            }
             i++;
         }
 

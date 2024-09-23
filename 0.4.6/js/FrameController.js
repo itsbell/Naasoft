@@ -5,6 +5,9 @@ export class FrameController {
         this._srcMap = {
             "INITIALFORM": "./0.4.6/html/initial.html",
             "MAINFORM": "./main.html",
+            "ABOUTFORM": "./about.html",
+            "GOALFORM": "./goal.html",
+            "SERVICEFORM": "./service.html",
 
             "SIGNUPFORM": "./0.4.6/html/signUp.html",
             "FINDPASSWORDFORM": "./0.4.6/html/findPassword.html",
@@ -13,6 +16,8 @@ export class FrameController {
             "LEAVEFORM": "./0.4.6/html/leave.html",
             "DESKFORM": "./0.4.6/html/desk.html",
             "PLAYFORM": "./0.4.6/html/play.html",
+            "EDITSOLUTIONFORM": "./editSolution.html",
+
             "MENTOATTICFORM": "./0.4.6/mento/html/attic.html",
             "MENTODESKFORM": "./0.4.6/mento/html/desk.html",
             "MENTOPLAYFORM": "./0.4.6/mento/html/play.html"

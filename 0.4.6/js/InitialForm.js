@@ -6,6 +6,7 @@ import { CourseList } from "./Course.js";
 import { StepBook } from "./Step.js";
 import { SideBar } from "./SideBar.js";
 import { FrameController } from "./FrameController.js";
+import { BookmarkCard } from "./Bookmark.js";
 
 export class InitialForm extends CompositeWindow {
     constructor(id) {
@@ -73,10 +74,28 @@ export class InitialForm extends CompositeWindow {
         //sideBar.AddActionMenu("다락방", this.OnTestSignInMenuClicked.bind(this));
         sideBar.AddControl("CHATBUTTON", "../assets/chat.png", this.OnChatButtonClicked.bind(this), "채팅문의");
         sideBar.AddControl("INSTAGRAMBUTTON", "../assets/instagram.png", this.OnInstagramButtonClicked.bind(this), "인스타그램");
-        this.Add(sideBar);
 
-        const frameController = new FrameController(this);
-        frameController.Append("MAINFORM");
+        // 3. iFrame을 끼운다.
+        let text = "";
+        const bookmarkCard = BookmarkCard.GetInstance();
+        if (bookmarkCard.length > 0 && bookmarkCard.grandChildForm === "ABOUTFORM") {
+            text = "인사";
+        }
+        if (bookmarkCard.length > 0 && bookmarkCard.grandChildForm === "GOALFORM") {
+            text = "목표";
+        }
+        else if (bookmarkCard.length > 0 && bookmarkCard.grandChildForm === "SERVICEFORM") {
+            text = "서비스";
+        }
+
+        if (text === "") {
+            const frameController = new FrameController(this);
+            frameController.Append("MAINFORM");
+        }
+        else {
+            sideBar.ClickMenuItemByText(text);
+        }
+        this.Add(sideBar);
 
         // 9. SideBar를 보여준다.
         setTimeout(sideBar.Show.bind(sideBar), 10);

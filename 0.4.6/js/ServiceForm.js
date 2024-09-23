@@ -24,6 +24,9 @@ export class ServiceForm extends CompositeWindow {
     OnLoaded() {
         const button = new Button("STARTBUTTON", "시작", this.OnStartButtonClicked.bind(this));
         this.Add(button);
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     OnStartButtonClicked() {

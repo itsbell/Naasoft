@@ -27,13 +27,13 @@ export class AbilityForm extends CompositeWindow {
     }
 
     static GetInstance() {
-        if (window.top.forms["ABILITYFORM"] === undefined) {
-            window.top.forms["ABILITYFORM"] = new AbilityForm("ABILITYFORM");
+        if (window.top.forms["MENTOABILITYFORM"] === undefined) {
+            window.top.forms["MENTOABILITYFORM"] = new AbilityForm("MENTOABILITYFORM");
         }
-        return window.top.forms["ABILITYFORM"];
+        return window.top.forms["MENTOABILITYFORM"];
     }
 
-    async OnLoaded() {
+    async OnLoaded() {        
         // 1. 이전 신청 목록을 만든다.
         const stepBook = StepBook.GetInstance();
         const menteeCard = MenteeCard.GetInstance();
@@ -209,6 +209,9 @@ export class AbilityForm extends CompositeWindow {
             notice.textContent = "능력 평가 기록이 없습니다.";
             graph.appendChild(notice);
         }
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnViewButtonClicked(event) {

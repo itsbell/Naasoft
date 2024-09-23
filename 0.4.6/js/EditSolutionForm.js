@@ -9,6 +9,8 @@ import { PlayShelf } from "./Play.js";
 import { PhpRequestor } from "./PhpRequestor.js";
 import { DateTime } from "./DateTime.js";
 import { IndexedDB } from "./IndexedDB.js";
+import { IndexForm } from "./IndexForm.js";
+import { FrameController } from "./FrameController.js";
 
 export class EditSolutionForm extends CompositeWindow {
     constructor(id) {
@@ -17,10 +19,10 @@ export class EditSolutionForm extends CompositeWindow {
         this.element = document.getElementById(this.id);
         this.element.logicalObject = this;
         this.element.addEventListener("load", this.OnLoaded.bind(this));
-        
+
         this._isSubmitted = false;
 
-        
+
     }
 
     static GetInstance() {
@@ -158,5 +160,7 @@ export class EditSolutionForm extends CompositeWindow {
         const solutionEditor = new SolutionEditor("SOLUTIONEDITOR");
         this.Add(solutionEditor);
 
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 }

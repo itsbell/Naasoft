@@ -34,6 +34,10 @@ export class AbilityForm extends CompositeWindow {
     }
 
     async OnLoaded() {
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        playCase.Reset();
+        
         // 1. 이전 신청 목록을 만든다.
         const stepBook = StepBook.GetInstance();
         const applyBook = ApplyBook.GetInstance();

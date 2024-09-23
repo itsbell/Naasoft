@@ -54,8 +54,9 @@ export class HistoryController extends Observer {
             grandChildFormId = grandChildForm.id;
 
             const bookmarkCard = BookmarkCard.GetInstance();
-            if (bookmarkCard.current != -1) {
+            if (bookmarkCard.length > 0) {
                 type = bookmarkCard.type;
+                chapterNumber = bookmarkCard.chapterNumber;
             }
 
             const applyBook = ApplyBook.GetInstance();

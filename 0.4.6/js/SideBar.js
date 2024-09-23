@@ -523,6 +523,25 @@ export class SideBar extends CompositeWindow {
         return list;
     }
 
+    ClickEdgeMenuItemByText(text, list = null) {
+        if (list === null) {
+            list = this.edgeList;
+        }
+        let i = 0;
+        while (i < list.children.length && list.children[i].textContent.substring(0, text.length) != text) {
+            i++;
+        }
+        if (i < list.children.length) {
+            const target = list.children[i];
+            list = target.children[0];
+            if (list == undefined || (list != undefined && list.style.display == "none")) {
+                target.dispatchEvent(new Event("click"));
+            }
+        }
+
+        return list;
+    }
+
     IsExistMenu(menuId, list = null) {
         let isExist = false;
         if (list === null) {

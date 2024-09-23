@@ -1,3 +1,4 @@
 import { AboutForm } from "./AboutForm.js";
 
-AboutForm.GetInstance();
+const aboutForm = AboutForm.GetInstance();
+aboutForm.Element.dispatchEvent(new Event("load"));

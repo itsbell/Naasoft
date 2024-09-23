@@ -1,4 +1,5 @@
 import { CompositeWindow } from "./Window.js";
+import { IndexForm } from "./IndexForm.js";
 
 export class GoalForm extends CompositeWindow {
     constructor(id) {
@@ -6,6 +7,8 @@ export class GoalForm extends CompositeWindow {
 
         this.element = document.getElementById(this.id);
         this.element.logicalObject = this;
+
+        this.element.addEventListener("load", this.OnLoaded.bind(this));
     }
 
     static GetInstance() {
@@ -13,5 +16,10 @@ export class GoalForm extends CompositeWindow {
             window.top.forms["GOALFORM"] = new GoalForm("GOALFORM");
         }
         return window.top.forms["GOALFORM"];
+    }
+
+    OnLoaded() {
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 }

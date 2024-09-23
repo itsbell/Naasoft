@@ -1263,8 +1263,10 @@ class InsertFeedbackQuery extends DatabaseQuery
         $queryResult = $this->connection->query(
             "SELECT Feedback.time From Feedback
              INNER JOIN Solution ON Solution.solutionCode = Feedback.solutionCode
-             WHERE Solution.chapterNumber= $params[4] AND Solution.problemNumber= $params[5] AND
-             Solution.number= $params[6]"
+             WHERE Solution.chapterNumber= $params[4] AND 
+             Solution.problemNumber= $params[5] AND
+             Solution.number= $params[6]
+             ORDER BY Feedback.time DESC LIMIT 1"
         );
         $array = $queryResult->fetch_array();
 
@@ -1508,7 +1510,7 @@ class IntegrateMentoQuery extends DatabaseQuery
     {
         $emailAddress = $params[0];
 
-        $integratePlayShelf = json_decode($params[2]);
+        $integratePlayShelf = json_decode($params[1]);
 
         $playShelf = new PlayShelf();
         $playShelf->ImposeMento($integratePlayShelf);

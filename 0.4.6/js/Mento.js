@@ -16,6 +16,10 @@ export class MentoCard extends BusinessObjects {
         return this._objects[0].emailAddress;
     }
 
+    get time() {
+        return this._objects[0].time;
+    }
+
     static GetInstance() {
         if (window.top.businessObjects["MENTOCARD"] === undefined) {
             window.top.businessObjects["MENTOCARD"] = new MentoCard();

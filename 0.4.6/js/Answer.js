@@ -193,7 +193,7 @@ export class AnswerCard extends BusinessObjects {
             integrateCard.Add(answer);
         }
 
-        return integrateList;
+        return integrateCard;
     }
 }
 

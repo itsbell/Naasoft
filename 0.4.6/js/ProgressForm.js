@@ -4,6 +4,7 @@ import { ApplyBook } from "./Apply.js";
 import { Table, Tr, Td } from "./Table.js"
 import { Button } from "./Buttons.js";
 import { IndexForm } from "./IndexForm.js";
+import { PlayShelf } from "./Play.js";
 
 export class ProgressForm extends CompositeWindow {
     constructor(id) {
@@ -23,6 +24,10 @@ export class ProgressForm extends CompositeWindow {
     }
 
     OnLoaded() {
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        playCase.Reset();
+
         // StepTable을 만든다. (항목 추가 포함)
         const stepBook = StepBook.GetInstance();
         const applyBook = ApplyBook.GetInstance();

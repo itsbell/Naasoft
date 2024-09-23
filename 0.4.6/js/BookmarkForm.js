@@ -33,6 +33,10 @@ export class BookmarkForm extends CompositeWindow {
     }
 
     async OnLoaded() {
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        playCase.Reset();
+
         const bookmarkCard = BookmarkCard.GetInstance();
         /** 1. 책갈피 표를 만든다. */
         const bookmarkTable = new NTable("BOOKMARKTABLE");
@@ -53,8 +57,6 @@ export class BookmarkForm extends CompositeWindow {
         }
 
         /** 2. 활동 표를 만든다. */
-        const playShelf = PlayShelf.GetInstance();
-        const playCase = playShelf.GetAt(0);
         const solutionBook = playCase.GetAt(1);
         const feedbackBook = playCase.GetAt(2);
         const questionBook = playCase.GetAt(3);

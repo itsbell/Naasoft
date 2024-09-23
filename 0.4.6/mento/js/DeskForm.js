@@ -3,6 +3,7 @@ import { MenteeCard } from "../../js/Mentee.js";
 import { SideBar } from "../../js/SideBar.js";
 import { IndexForm } from "../../js/IndexForm.js";
 import { FrameController } from "../../js/FrameController.js";
+import { BookmarkCard } from "../../js/Bookmark.js";
 
 export class DeskForm extends CompositeWindow {
     constructor(id) {
@@ -17,27 +18,31 @@ export class DeskForm extends CompositeWindow {
     }
 
     static GetInstance() {
-        if (window.top.deskForm === undefined) {
-            window.top.deskForm = new DeskForm("MENTODESKFORM");
+        if (window.top.forms["MENTODESKFORM"] === undefined) {
+            window.top.forms["MENTODESKFORM"] = new DeskForm("MENTODESKFORM");
         }
-        return window.top.deskForm;
+        return window.top.forms["MENTODESKFORM"];
     }
 
     OnLoaded() {
-        window.top.sessionStorage.setItem("PageId", this.id);
-
         const menteeCard = MenteeCard.GetInstance();
-
         window.top.document.title = menteeCard.name;
 
         // 3. 사이드바를 만든다.
         const sideBar = new SideBar("SIDEBAR");
         sideBar.AddTop("멘토", "MENTOATTICFORM", "../../assets/logo.png");
         sideBar.AddControl("UPBUTTON", "../../assets/up.png", this.OnUpButtonClicked.bind(this), "뒤로가기");
-        sideBar.AddSwitchMenu("진행", "PROGRESSFORM", "./progress.html");
-        sideBar.AddSwitchMenu("성과", "ABILITYFORM", "./ability.html");
+        sideBar.AddSwitchMenu("진행", "MENTOPROGRESSFORM", "./progress.html");
+        sideBar.AddSwitchMenu("성과", "MENTOABILITYFORM", "./ability.html");
+
+        let text = "진행";
+        const bookmarkCard = BookmarkCard.GetInstance();
+        if (bookmarkCard.length > 0 && bookmarkCard.grandChildForm === "MENTOABILITYFORM") {
+            text = "성과";
+        }
+        sideBar.ClickMenuItemByText(text);
+
         this.Add(sideBar);
-        sideBar.ClickMenuItem(0);
 
         setTimeout(function () {
             let index = this.Find("SIDEBAR");

@@ -1516,10 +1516,15 @@ class Mento extends BusinessObject
 
     public function JsonSerialize()
     {
+        $time = null;
+        if ($this->time != null) {
+            $time = $this->time->JsonSerialize();
+        }
+
         $array = [
             '_name' => $this->name,
             '_emailAddress' => $this->emailAddress,
-            '_time' => $this->time
+            '_time' => $time
         ];
         return $array;
     }

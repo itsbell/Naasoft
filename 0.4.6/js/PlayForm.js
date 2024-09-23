@@ -17,6 +17,16 @@ export class PlayForm extends CompositeWindow {
         this.element.logicalObject = this;
 
         this.element.addEventListener("load", this.OnLoaded.bind(this));
+
+        this._frame = null;
+    }
+
+    get frame() {
+        return this._frame;
+    }
+
+    set frame(frame) {
+        this._frame = frame;
     }
 
     static GetInstance() {
@@ -140,10 +150,8 @@ export class PlayForm extends CompositeWindow {
                     sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
                 }
                 else {
-                    let iframe = document.createElement("iframe");
-                    iframe.id = "EDITSOLUTIONFORM";
-                    iframe.src = "./editSolution.html";
-                    this.element.appendChild(iframe);
+                    const frameController = new FrameController(this);
+                    frameController.Append("EDITSOLUTIONFORM");
                 }
             }
             else {
@@ -190,7 +198,7 @@ export class PlayForm extends CompositeWindow {
 
         bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
         await indexedDB.Put("BookmarkCard", bookmarkCard);
-        
+
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
         frameController.Change("DESKFORM");

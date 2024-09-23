@@ -30,6 +30,10 @@ export class LeaveForm extends CompositeWindow {
     }
 
     OnLoaded() {
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        playCase.Reset();
+        
         const leaveButton = document.getElementById("LEAVEBUTTON");
         leaveButton.addEventListener("click", this.OnLeaveButtonClicked.bind(this));
 

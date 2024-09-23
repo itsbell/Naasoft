@@ -10,7 +10,7 @@ import { FeedbackBook } from "./Feedback.js";
 import { QuestionBook } from "./Question.js";
 import { AnswerBook } from "./Answer.js";
 import { PlayShelf, PlayCase } from "./Play.js";
-import { BookmarkCard } from "./Bookmark.js";
+import { BookmarkCard, Bookmark } from "./Bookmark.js";
 import { MentoCard } from "./Mento.js";
 import { MenteeInfoList } from "./MenteeInfo.js";
 import { PhpRequestor } from "./PhpRequestor.js";
@@ -202,14 +202,15 @@ export class IndexForm extends CompositeWindow {
             let state = new HistoryState();
             state.SetObject(this.historyController.state);
             if (state.childForm != undefined) {
-                let location = 0;
-                if(bookmarkCard.current != -1){
-                    location = bookmarkCard.location;
+                if (bookmarkCard.length > 0) {
+                    bookmarkCard.Correct(0, bookmarkCard.location, state.childForm, state.grandChildForm, state.type,
+                        state.courseName, state.stepNumber, state.chapterNumber, state.problemNumber, state.solutionNumber);
                 }
-                bookmarkCard.Correct(0, location,
-                    state.childForm, state.grandChildForm, state.type,
-                    state.courseName, state.stepNumber,
-                    state.chapterNumber, state.problemNumber, state.solutionNumber);
+                else {
+                    let bookmark = new Bookmark(0, state.childForm, state.grandChildForm, state.type,
+                        state.courseName, state.stepNumber, state.chapterNumber, state.problemNumber, state.solutionNumber);
+                    bookmarkCard.Add(bookmark);
+                }
 
                 await indexedDB.Put("BookmarkCard", bookmarkCard);
 
@@ -235,9 +236,17 @@ export class IndexForm extends CompositeWindow {
 
         let state = new HistoryState();
         state.SetObject(event.state);
+
         const bookmarkCard = BookmarkCard.GetInstance();
-        bookmarkCard.Correct(0, bookmarkCard.location, state.childForm, state.grandChildForm, state.type,
-            state.courseName, state.stepNumber, state.chapterNumber, state.problemNumber, state.solutionNumber);
+        if (bookmarkCard.length > 0) {
+            bookmarkCard.Correct(0, bookmarkCard.location, state.childForm, state.grandChildForm, state.type,
+                state.courseName, state.stepNumber, state.chapterNumber, state.problemNumber, state.solutionNumber);
+        }
+        else {
+            let bookmark = new Bookmark(0, 0, state.childForm, state.grandChildForm, state.type,
+                state.courseName, state.stepNumber, state.chapterNumber, state.problemNumber, state.solutionNumber);
+            bookmarkCard.Add(bookmark);
+        }
 
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 

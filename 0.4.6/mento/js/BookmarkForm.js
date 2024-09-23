@@ -32,10 +32,10 @@ export class BookmarkForm extends CompositeWindow {
 
     /** @return {BookmarkForm} */
     static GetInstance() {
-        if (window.top.forms["BOOKMARKFORM"] === undefined) {
-            window.top.forms["BOOKMARKFORM"] = new BookmarkForm("BOOKMARKFORM");
+        if (window.top.forms["MENTOBOOKMARKFORM"] === undefined) {
+            window.top.forms["MENTOBOOKMARKFORM"] = new BookmarkForm("MENTOBOOKMARKFORM");
         }
-        return window.top.forms["BOOKMARKFORM"];
+        return window.top.forms["MENTOBOOKMARKFORM"];
     }
 
     async OnLoaded() {
@@ -46,6 +46,8 @@ export class BookmarkForm extends CompositeWindow {
         // WorkList UI를 만든다.
         this.MakeWorkListUI();
 
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async LoadWorkList() {
@@ -221,7 +223,7 @@ export class BookmarkForm extends CompositeWindow {
         // indexedDB에 놀이 책장을 저장한다.
         await indexedDB.Put("PlayShelf", playShelf);
 
-        let bookmark = new Bookmark("", "", work.type, work.courseName, work.stepNumber, work.chapterNumber, work.problemNumber, work.solutionNumber);
+        let bookmark = new Bookmark(0, "MENTOPLAYFORM","MENTOSOLVEFORM", work.type, work.courseName, work.stepNumber, work.chapterNumber, work.problemNumber, work.solutionNumber);
         bookmarkCard.Add(bookmark);
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 

@@ -7,6 +7,7 @@ import { PhpRequestor } from "../../js/PhpRequestor.js";
 import { IndexedDB } from "../../js/IndexedDB.js";
 import { Table, Tr, Td } from "../../js/Table.js"
 import { Button } from "../../js/Buttons.js";
+import { IndexForm } from "../../js/IndexForm.js";
 
 export class ProgressForm extends CompositeWindow {
     constructor(id) {
@@ -23,10 +24,10 @@ export class ProgressForm extends CompositeWindow {
     }
 
     static GetInstance() {
-        if (window.top.forms["PROGRESSFORM"] === undefined) {
-            window.top.forms["PROGRESSFORM"] = new ProgressForm("PROGRESSFORM");
+        if (window.top.forms["MENTOPROGRESSFORM"] === undefined) {
+            window.top.forms["MENTOPROGRESSFORM"] = new ProgressForm("MENTOPROGRESSFORM");
         }
-        return window.top.forms["PROGRESSFORM"];
+        return window.top.forms["MENTOPROGRESSFORM"];
     }
 
     async DoPayment() {
@@ -112,6 +113,9 @@ export class ProgressForm extends CompositeWindow {
 
         const stepTableManager = new StepTableManager(this);
         stepTableManager.Create();
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnApplyButtonClicked(event) {
