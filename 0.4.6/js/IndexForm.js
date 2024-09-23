@@ -257,6 +257,46 @@ export class IndexForm extends CompositeWindow {
         frameController.Change(bookmarkCard.childForm);
     }
 
+    // async OnBeforeUnloaded() {
+    //     const requestor = new PhpRequestor();
+    //     const menteeCard = MenteeCard.GetInstance();
+    //     const mentoCard = MentoCard.GetInstance();
+    //     if (mentoCard.length > 0) {
+    //         const emailAddress = mentoCard.emailAddress;
+    //         const time = mentoCard.time;
+
+    //         const playShelf = PlayShelf.GetInstance();
+    //         const integratePlayShelf = playShelf.GetMentoIntegrateObject(time);
+    //         const feedbacksAndAnswers = JSON.stringify(integratePlayShelf);
+
+    //         // 서버에 데이터 결합을 요청한다.
+    //         await requestor.Post("./0.4.6/php/IntegrateMento.php",
+    //             "emailAddress=" + emailAddress +
+    //             "&playShelf=" + feedbacksAndAnswers);
+    //     }
+    //     else if (menteeCard.length > 0) {
+    //         const emailAddress = menteeCard.emailAddress;
+    //         const time = menteeCard.time;
+
+    //         const applyBook = ApplyBook.GetInstance();
+    //         const integrateApplyBook = applyBook.GetIntegrateObject(time);
+    //         const applies = JSON.stringify(integrateApplyBook);
+
+    //         const playShelf = PlayShelf.GetInstance();
+    //         const integratePlayShelf = playShelf.GetMenteeIntegrateObject(time);
+    //         const solutionsAndQuestions = JSON.stringify(integratePlayShelf);
+
+    //         const bookmarkCard = BookmarkCard.GetInstance();
+    //         const integrateBookmarkCard = bookmarkCard.GetIntegrateObject();
+    //         const bookmark = JSON.stringify(integrateBookmarkCard);
+    //         // 서버에 데이터 결합을 요청한다.
+    //         await requestor.Post("./0.4.6/php/IntegrateMentee.php",
+    //             "emailAddress=" + emailAddress +
+    //             "&applyBook=" + applies + "&playShelf=" + solutionsAndQuestions + "&bookmarkCard=" + bookmark);
+    //     }
+    //     console.log("111");
+    // }
+
     async OnKeyDown(event) {
         if (event.ctrlKey && event.keyCode == 81) { // Ctrl Q
             const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);

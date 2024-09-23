@@ -1455,6 +1455,11 @@ class Bookmark extends BusinessObject
 
     function __destruct() {}
 
+    public function GetChapterNumber()
+    {
+        return $this->chapterNumber;
+    }
+
     public function JsonSerialize()
     {
         $array = [

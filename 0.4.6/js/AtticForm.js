@@ -45,7 +45,6 @@ export class AtticForm extends CompositeWindow {
 
     async OnLoaded() {
         window.top.document.title = "다락방";
-
         const applyBook = ApplyBook.GetInstance();
 
         // 2. 사이드바를 만든다.

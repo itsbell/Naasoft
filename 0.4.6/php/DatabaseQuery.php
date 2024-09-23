@@ -9,9 +9,9 @@ class DatabaseQuery
 
     public function __construct()
     {
-        // $this->connection = new mysqli('localhost', 'naasofttest', 'parkcom9424!', 'naasofttest');
+        $this->connection = new mysqli('localhost', 'naasofttest', 'parkcom9424!', 'naasofttest');
         // $this->connection = new mysqli('localhost', 'jonghwan0', 'parkcom9424!', 'jonghwan0');
-        $this->connection = new mysqli('localhost', 'naamentoring', 'naamentoring', 'naamentoring');
+        // $this->connection = new mysqli('localhost', 'naamentoring', 'naamentoring', 'naamentoring');
     }
 
     function __destruct()
@@ -1436,11 +1436,16 @@ class IntegrateMenteeQuery extends DatabaseQuery
 
                 // 다르면 갱신한다.
                 if ($time != $array[0] || $content != $array[1] || $imageData != $array[2]) {
-                    $this->connection->query(
+                    $stmt = $this->connection->prepare(
                         "UPDATE Solution 
-                         SET Solution.time = \"$time\", Solution.content = \"$content\", Solution.image = \"$image\"
+                         SET Solution.time = \"$time\", Solution.content = \"$content\", Solution.image = ?
                          WHERE Solution.solutionCode = \"$array[3]\""
                     );
+    
+                    $null = NULL;
+                    $stmt->bind_param("b", $null);
+                    $stmt->send_long_data(0, $imageData);
+                    $stmt->execute();
                 }
 
                 $j++;
