@@ -924,9 +924,10 @@ INNER JOIN Payment ON Payment.applyCode = Apply.applyCode
 WHERE Apply.menteeCode = Mentee.menteeCode) = 0 AND TIMESTAMPDIFF(DAY, Mentee.time, NOW()) >= 1;
 END//
 
-CREATE PROCEDURE InsertToMentee(IN name VARCHAR(10), IN emailAddress VARCHAR(250), IN password VARCHAR(128))
+CREATE PROCEDURE InsertToMentee(IN name VARCHAR(10), IN emailAddress VARCHAR(250), IN password VARCHAR(128), OUT time DATETIME)
 BEGIN
-INSERT INTO Mentee (name, emailAddress, password, time, menteeCode) VALUES (name, emailAddress, password, NOW(), GetMenteeCode());
+SET time = NOW();
+INSERT INTO Mentee (name, emailAddress, password, time, menteeCode) VALUES (name, emailAddress, password, time, GetMenteeCode());
 END//
 
 CREATE PROCEDURE ClearFromAuthentication(IN minute INT)
@@ -949,29 +950,34 @@ BEGIN
 SELECT Mentee.name, Mentee.emailAddress, NOW() INTO name, emailAddress, time FROM Mentee WHERE Mentee.emailAddress = _emailAddress;
 END//
 
-CREATE PROCEDURE InsertToApply(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT)
+CREATE PROCEDURE InsertToApply(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, OUT time DATETIME)
 BEGIN
 DECLARE menteeCode CHAR(9);
 DECLARE courseCode CHAR(4);
 DECLARE stepCode CHAR(6);
+
 SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
 SET courseCode = GetCourseCodeByName(courseName);
 SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-INSERT INTO Apply (time, applyCode, menteeCode, stepCode) VALUES (NOW(), GetApplyCode(), menteeCode, stepCode);
+SET time = NOW();
+
+INSERT INTO Apply (time, applyCode, menteeCode, stepCode) VALUES (time, GetApplyCode(), menteeCode, stepCode);
 END//
 
-CREATE PROCEDURE InsertToPayment(IN emailAddress VARCHAR(250), IN orderId VARCHAR(64), IN orderName VARCHAR(64), IN price DECIMAL(15, 2))
+CREATE PROCEDURE InsertToPayment(IN emailAddress VARCHAR(250), IN orderId VARCHAR(64), IN orderName VARCHAR(64), IN price DECIMAL(15, 2), OUT time DATETIME)
 BEGIN
 DECLARE menteeCode CHAR(9);
 DECLARE applyCode CHAR(18);
 SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
+SET time = NOW();
 SELECT Apply.applyCode INTO applyCode FROM Apply WHERE Apply.menteeCode = menteeCode ORDER BY Apply.time DESC LIMIT 1;
 UPDATE Apply 
 INNER JOIN Step ON Step.stepCode = Apply.stepCode 
-SET Apply.state = "ALIVE", Apply.start = NOW(), Apply.end = DATE_ADD(NOW(), INTERVAL Step.period DAY) 
+SET Apply.state = "ALIVE", Apply.start = time, Apply.end = DATE_ADD(time, INTERVAL Step.period DAY) 
 WHERE Apply.applyCode = applyCode;
+
 INSERT INTO Payment (orderId, orderName, price, time, paymentCode, applyCode)
-VALUES (orderId, orderName, price, NOW(), GetPaymentCode(), applyCode);
+VALUES (orderId, orderName, price, time, GetPaymentCode(), applyCode);
 END//
 
 CREATE PROCEDURE GetCodeFromStepByCourseNameAndStepNumber(IN courseName VARCHAR(32), IN stepNumber INT, OUT stepCode CHAR(6))
@@ -1113,9 +1119,9 @@ SET result = 1;
 END IF;
 END//
 
-CREATE PROCEDURE GetFromMento(IN _emailAddress VARCHAR(250), OUT name VARCHAR(10), OUT emailAddress VARCHAR(250))
+CREATE PROCEDURE GetFromMento(IN _emailAddress VARCHAR(250), OUT name VARCHAR(10), OUT emailAddress VARCHAR(250), OUT time DATETIME)
 BEGIN
-SELECT Mento.name, Mento.emailAddress INTO name, emailAddress From Mento Where Mento.emailAddress = _emailAddress;
+SELECT Mento.name, Mento.emailAddress, NOW() INTO name, emailAddress, time From Mento Where Mento.emailAddress = _emailAddress;
 END//
 
 CREATE PROCEDURE InsertToFeedback(IN mentoEmailAddress VARCHAR(250), IN menteeEmailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT, IN evaluate INT, IN content TEXT)
@@ -1500,6 +1506,7 @@ DELETE Evaluate FROM Evaluate INNER JOIN Solution ON Solution.solutionCode = Eva
 WHERE Solution.applyCode = applyCode;
 DELETE FROM Solution WHERE Solution.applyCode = applyCode;
 DELETE FROM Payment WHERE Payment.applyCode = applyCode;
+DELETE FROM Bookmark WHERE Bookmark.applyCode = applyCode;
 DELETE FROM Apply WHERE Apply.applyCode = applyCode;
 SET i = i - 1;
 END WHILE;
