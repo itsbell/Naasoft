@@ -87,6 +87,7 @@ export class FeedbackList extends BusinessObjects {
     }
 
     SetObject(object, problemList, solutionBook) {
+        this._objects.splice(0, this._length);
         this._length = object._length;
         this._current = object._current;
 

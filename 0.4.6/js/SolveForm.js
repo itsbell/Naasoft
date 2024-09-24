@@ -37,8 +37,8 @@ export class SolveForm extends CompositeWindow {
         if (this._isSubmitted === false) {
             this._isSubmitted = true;
 
-            content = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-            content = content.replace(/"/g, '\\"');   // escape quotes
+            let postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
+            postContent = postContent.replace(/"/g, '\\"');   // escape quotes
 
             const requestor = new PhpRequestor();
             const playForm = PlayForm.GetInstance();
@@ -78,7 +78,7 @@ export class SolveForm extends CompositeWindow {
             index = questionList.Add(question);
             question = questionList.GetAt(index);
 
-            let body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&number=${question.number}&content=${question.content}`;
+            let body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&number=${question.number}&content=${postContent}`;
             let response = await requestor.PostJson("../php/InsertQuestion.php", body);
 
             let time = new DateTime(response.time);

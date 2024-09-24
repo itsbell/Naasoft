@@ -22,6 +22,10 @@ export class PlayForm extends CompositeWindow {
         return this._frame;
     }
 
+    set frame(frame) {
+        this._frame = frame;
+    }
+
     static GetInstance() {
         if (window.top.playForm === undefined) {
             window.top.playForm = new PlayForm("MENTOPLAYFORM");

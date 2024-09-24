@@ -129,7 +129,7 @@ export class BookmarkForm extends CompositeWindow {
 
         /** 활동이 없으면 */
         if (workList.length === 0) {
-            const applyBook = applyBook.GetInstance();
+            const applyBook = ApplyBook.GetInstance();
             const applyCard = applyBook.GetAt(applyBook.current);
 
             let dayOfWeek = applyCard.time.GetKoreanDayOfWeek();

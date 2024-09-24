@@ -131,7 +131,6 @@ export class PlayForm extends CompositeWindow {
             if (bookmarkCard.chapterNumber != -1) {
                 let problemListIndex = problemList.Find(bookmarkCard.chapterNumber, bookmarkCard.problemNumber);
                 problemList.Move(problemListIndex);
-                solutionBook.Move(0);
                 problem = problemList.GetAt(problemListIndex);
                 list = sideBar.ClickMenuItemByText(problem.chapterNumber + "장");
                 solutionListIndex = solutionBook.Find(problem.chapterNumber, problem.number);

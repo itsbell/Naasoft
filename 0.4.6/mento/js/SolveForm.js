@@ -36,8 +36,8 @@ export class SolveForm extends CompositeWindow {
 
     async SubmitFeedback(evaluate, content) {
         if (this.isFeedbackSubmitted === false) {
-            content = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-            content = content.replace(/"/g, '\\"');   // escape quotes
+            let postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
+            postContent = postContent.replace(/"/g, '\\"');   // escape quotes
 
             const requestor = new PhpRequestor();
             const playForm = PlayForm.GetInstance();
@@ -83,7 +83,7 @@ export class SolveForm extends CompositeWindow {
             index = feedbackList.Add(feedback);
 
             // 4. 서버에 피드백 추가를 요청한다.
-            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&evaluate=${evaluate}&content=${content}`;
+            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&evaluate=${evaluate}&content=${postContent}`;
             let response = await requestor.PostJson("../../php/InsertFeedback.php", body);
 
             this.isFeedbackSubmitted = true;
@@ -108,7 +108,7 @@ export class SolveForm extends CompositeWindow {
                 feedbackView.AddItem(feedback.content, feedback.evaluate);
                 j++;
             }
-            feedbackView.SetEditor(problem.evaluate); //TODO: 이진수 분류로 수정하기
+            feedbackView.SetEditor(problem.evaluate);
             this.Add(feedbackView);
 
             index = this.Find("SOLUTIONVIEW");
@@ -126,8 +126,8 @@ export class SolveForm extends CompositeWindow {
 
     async SubmitAnswer(questionNumber, content) {
         if (this.isAnswerSubmitted === false) {
-            content = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-            content = content.replace(/"/g, '\\"');   // escape quotes
+            let postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
+            postContent = postContent.replace(/"/g, '\\"');   // escape quotes
 
             const playForm = PlayForm.GetInstance();
             const requestor = new PhpRequestor();
@@ -171,7 +171,7 @@ export class SolveForm extends CompositeWindow {
             answerCard.Add(answer);
 
             // 4. 서버에 답변 추가를 요청한다.
-            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&questionNumber=${questionNumber}&content=${content}`;
+            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&questionNumber=${questionNumber}&content=${postContent}`;
             let response = await requestor.PostJson("../../php/InsertAnswer.php", body);
 
             this.isAnswerSubmitted = true;

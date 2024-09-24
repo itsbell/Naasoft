@@ -5,6 +5,7 @@ import { MenteeCard, Mentee } from "./Mentee.js";
 import { IndexedDB } from "./IndexedDB.js";
 import { IndexForm } from "./IndexForm.js";
 import { FrameController } from "./FrameController.js";
+import { DateTime } from "./DateTime.js";
 
 export class SignUpForm extends CompositeWindow {
     constructor(id) {

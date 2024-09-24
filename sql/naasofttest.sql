@@ -1033,7 +1033,7 @@ BEGIN
     SET time = NOW();
 
     INSERT INTO Solution(chapterNumber, problemNumber, number, time, content, image, solutionCode, applyCode)
-    VALUES(chapterNumber, problemNumber, number, NOW(), content, image, solutionCode, applyCode);
+    VALUES(chapterNumber, problemNumber, number, time, content, image, solutionCode, applyCode);
     INSERT INTO Evaluate(evaluateCode, solutionCode) VALUES(GetEvaluateCode(), solutionCode);
 END//
 

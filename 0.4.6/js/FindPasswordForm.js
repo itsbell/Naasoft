@@ -33,6 +33,9 @@ export class FindPasswordForm extends CompositeWindow {
 
         const passwordChangeButton = document.getElementById("PASSWORDCHANGEBUTTON");
         passwordChangeButton.addEventListener("click", this.OnPasswordChangeButtonClicked);
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnAuthenticateButtonClicked() {

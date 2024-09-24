@@ -50,8 +50,10 @@ export class HistoryController extends Observer {
             const childForm = this._form.frame.contentDocument.getElementById(this._form.frame.id).logicalObject;
             childFormId = childForm.id;
 
-            const grandChildForm = childForm.frame.contentDocument.getElementById(childForm.frame.id).logicalObject;
-            grandChildFormId = grandChildForm.id;
+            if (childForm.frame.contentDocument.getElementById(childForm.frame.id) != null) {
+                const grandChildForm = childForm.frame.contentDocument.getElementById(childForm.frame.id).logicalObject;
+                grandChildFormId = grandChildForm.id;
+            }
 
             const bookmarkCard = BookmarkCard.GetInstance();
             if (bookmarkCard.length > 0) {

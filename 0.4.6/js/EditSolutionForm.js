@@ -56,10 +56,10 @@ export class EditSolutionForm extends CompositeWindow {
             playForm.Element.className = "waiting";
             this.element.className = "waiting";
 
-            let text = '';
+            let postContent = '';
             if (content != null) {
-                text = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-                text = content.replace(/"/g, '\\"');   // escape quotes
+                postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
+                postContent = content.replace(/"/g, '\\"');   // escape quotes
             }
 
             let image = '';
@@ -92,7 +92,7 @@ export class EditSolutionForm extends CompositeWindow {
             index = solutionList.Add(solution);
             solution = solutionList.GetAt(index);
 
-            let body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&number=${solution.number}&content=${solution.content}&image=${solution.image}`;
+            let body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&number=${solution.number}&content=${postContent}&image=${solution.image}`;
             let time = await requestor.Post("../php/InsertSolution.php", body);
 
             playForm.Element.className = "";

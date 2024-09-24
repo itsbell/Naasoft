@@ -9,9 +9,9 @@ class DatabaseQuery
 
     public function __construct()
     {
-        $this->connection = new mysqli('localhost', 'naasofttest', 'parkcom9424!', 'naasofttest');
+        // $this->connection = new mysqli('localhost', 'naasofttest', 'parkcom9424!', 'naasofttest');
         // $this->connection = new mysqli('localhost', 'jonghwan0', 'parkcom9424!', 'jonghwan0');
-        // $this->connection = new mysqli('localhost', 'naamentoring', 'naamentoring', 'naamentoring');
+        $this->connection = new mysqli('localhost', 'naamentoring', 'naamentoring', 'naamentoring');
     }
 
     function __destruct()

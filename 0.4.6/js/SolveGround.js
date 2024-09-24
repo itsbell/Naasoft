@@ -555,7 +555,7 @@ class FeedbackBinder {
         if (feedbackList != null) {
             while (i < feedbackList.length) {
                 feedback = feedbackList.GetAt(i);
-                feedbackCard = new FeedbackCard(feedback.Time, parseInt(feedback.Evaluate), feedback.Content);
+                feedbackCard = new FeedbackCard(feedback.time, parseInt(feedback.evaluate), feedback.content);
                 this.cards.push(feedbackCard);
                 this.length++;
                 i++;
