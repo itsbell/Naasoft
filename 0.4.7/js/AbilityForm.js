@@ -249,7 +249,7 @@ export class AbilityForm extends CompositeWindow {
 
                 const requestor = new PhpRequestor();
                 // 3. 서버에 문제 데이터를 요청한다.
-                const problemListObject = await requestor.Post("../php/GetProblems.php",
+                const problemListObject = await requestor.PostJson("../php/GetProblems.php",
                     "courseName=" + applyCard.courseName + "&stepNumber=" + stepNumber);
 
                 // 4. 문제 목록에 추가한다.
@@ -259,8 +259,8 @@ export class AbilityForm extends CompositeWindow {
 
                 // 5. 서버에 풀이 데이터를 요청한다.
                 const solutionBook = new SolutionBook();
-                const solutionBookObject = await requestor.Post("../php/GetSolutions.php",
-                    "emailAddress=" + emailAddress + "&courseName=" + courseName + "&stepNumber=" + stepNumber);
+                const solutionBookObject = await requestor.PostJson("../php/GetCurrentApplySolutions.php",
+                    "emailAddress=" + emailAddress + "&courseName=" + applyCard.courseName + "&stepNumber=" + stepNumber);
 
                 // 6. 풀이 책에 추가한다.
                 solutionBook.SetObject(solutionBookObject, problemList);
@@ -269,10 +269,10 @@ export class AbilityForm extends CompositeWindow {
                 // 7. 서버에 피드백 데이터를 요청한다.
                 const feedbackBook = new FeedbackBook();
                 const feedbackBookObject = await requestor.PostJson("../php/GetCurrentApplyFeedbacks.php",
-                    "emailAddress=" + emailAddress + "&courseName=" + courseName + "&stepNumber=" + stepNumber);
+                    "emailAddress=" + emailAddress + "&courseName=" + applyCard.courseName + "&stepNumber=" + stepNumber);
 
                 // 8. 피드백 책에 추가한다.
-                feedbackBook.SetObject(feedbackBookObject);
+                feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
                 playCase.Add(feedbackBook);
 
                 // 풀이들 상태를 수정한다.
@@ -283,18 +283,18 @@ export class AbilityForm extends CompositeWindow {
                 // 9. 서버에 질문과 답변 데이터를 요청한다.
                 const questionBook = new QuestionBook();
                 const questionBookObject = await requestor.PostJson("../php/GetCurrentApplyQuestions.php",
-                    "emailAddress=" + emailAddress + "&courseName=" + courseName + "&stepNumber=" + stepNumber);
+                    "emailAddress=" + emailAddress + "&courseName=" + applyCard.courseName + "&stepNumber=" + stepNumber);
 
                 // 10. 질문 책에 추가한다.
-                questionBook.SetObject(questionBookObject);
+                questionBook.SetObject(questionBookObject, problemList, solutionBook);
                 playCase.Add(questionBook);
 
                 const answerBook = new AnswerBook();
                 const answerBookObject = await requestor.PostJson("../php/GetCurrentApplyAnswers.php",
-                    "emailAddress=" + emailAddress + "&courseName=" + courseName + "&stepNumber=" + stepNumber);
+                    "emailAddress=" + emailAddress + "&courseName=" + applyCard.courseName + "&stepNumber=" + stepNumber);
 
                 // 11. 답변 책에 추가한다.
-                answerBook.SetObject(answerBookObject);
+                answerBook.SetObject(answerBookObject, problemList, solutionBook, questionBook);
                 playCase.Add(answerBook);
 
                 playShelf.Add(playCase);
@@ -304,7 +304,7 @@ export class AbilityForm extends CompositeWindow {
                 await indexedDB.Open();
                 await indexedDB.Put("PlayShelf", playShelf);
 
-                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", courseName, stepNumber, -1, 0, 0);
+                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", applyCard.courseName, stepNumber, -1, 0, 0);
                 await indexedDB.Put("BookmarkCard", bookmarkCard);
 
                 // 13. 놀이로 이동한다.

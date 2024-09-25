@@ -61,20 +61,6 @@ export class SolutionBook extends BusinessObjects {
 
         return index;
     }
-    
-    FindFinished() {
-        let index = -1;
-
-        let i = 0;
-        while (i < this._length && this._objects[i].state != "FINISH") {
-            i++;
-        }
-        if (i < this._length) {
-            index = i;
-        }
-
-        return index;
-    }
 
     GetIntegrateObject(time) {
         const integrateBook = new SolutionBook();
@@ -199,6 +185,20 @@ export class SolutionList extends BusinessObjects {
         }
 
         return integrateList;
+    }
+
+    FindFinished() {
+        let index = -1;
+
+        let i = 0;
+        while (i < this._length && this._objects[i].state != "FINISH") {
+            i++;
+        }
+        if (i < this._length) {
+            index = i;
+        }
+
+        return index;
     }
 }
 

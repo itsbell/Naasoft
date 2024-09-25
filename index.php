@@ -7,13 +7,13 @@
     <meta name="description" content="" />
     <meta name="author" content="chan" />
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="./0.4.6/assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="./0.4.7/assets/favicon.ico" />
 
-    <link href="./0.4.6/css/IndexForm.css" rel="stylesheet" />
+    <link href="./0.4.7/css/IndexForm.css" rel="stylesheet" />
 </head>
 
 <body id="INDEXFORM">
-    <script src="./0.4.6/js/IndexApp.js" type="module"></script>
+    <script src="./0.4.7/js/IndexApp.js" type="module"></script>
 </body>
 
 </html>

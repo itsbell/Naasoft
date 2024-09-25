@@ -154,17 +154,22 @@ export class PlayForm extends CompositeWindow {
                 }
             }
             else {
-                problemList.Move(0);
-                problem = problemList.GetAt(0);
-                solutionListIndex = solutionBook.Find(problem.chapterNumber, problem.number);
-                solutionBook.Move(solutionListIndex);
-                solutionList = solutionBook.GetAt(solutionListIndex);
-                solutionList.Move(0);
-                solution = solutionList.GetAt(0);
+                if (solutionBook.length > 0) {
+                    solutionBook.Move(solutionListIndex);
+                    solutionList = solutionBook.GetAt(0);
+                    
+                    chapterNumber = solutionList.chapterNumber;
+                    problemNumber = solutionList.problemNumber;
+                    
+                    problemList.MoveByChapterNumberAndNumber(chapterNumber, problemNumber);
+                    
+                    solutionList.Move(0);
+                    solution = solutionList.GetAt(0);
 
-                list = sideBar.ClickMenuItemByText(problem.chapterNumber + "장");
-                list = sideBar.ClickMenuItemByText("문제 " + problem.number, list);
-                sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
+                    list = sideBar.ClickMenuItemByText(chapterNumber + "장");
+                    list = sideBar.ClickMenuItemByText("문제 " + problemNumber, list);
+                    sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
+                }
             }
         }
 

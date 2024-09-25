@@ -61,7 +61,7 @@ export class Footer extends CompositeWindow {
         menu.appendChild(span);
 
         span = document.createElement("span");
-        span.textContent = "| ver 0.4.6 |";
+        span.textContent = "| ver 0.4.7 |";
         menu.appendChild(span);
 
         span = document.createElement("span");

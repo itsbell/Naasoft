@@ -96,7 +96,7 @@ export class IndexForm extends CompositeWindow {
             mentoCard.SetObject(mentoCardObject);
             // 6. 멘토 카드를 적재했으면
             // 6.1. 서버에 멘티 정보 데이터를 요청한다.
-            let menteeInfoListObject = await requestor.PostJson("./0.4.6/php/GetAllMenteeInfo.php");
+            let menteeInfoListObject = await requestor.PostJson("./0.4.7/php/GetAllMenteeInfo.php");
 
             // 6.2. 멘티 정보 목록에 추가한다.
             menteeInfoList.SetObject(menteeInfoListObject);
@@ -111,7 +111,7 @@ export class IndexForm extends CompositeWindow {
             // 8. 멘티 카드를 적재했으면
             // 8.1. 서버에 신청 데이터를 요청한다.
             let body = `emailAddress=${menteeCard.emailAddress}`;
-            const applyBookObject = await requestor.PostJson("./0.4.6/php/GetAllApply.php", body);
+            const applyBookObject = await requestor.PostJson("./0.4.7/php/GetAllApply.php", body);
 
             // 8.2. 신청 책에 추가한다.
             applyBook.SetObject(applyBookObject, courseList, stepBook);
@@ -138,7 +138,7 @@ export class IndexForm extends CompositeWindow {
             // 8.6. 서버에 문제 데이터를 요청한다.
             const problemList = new ProblemList();
             body = `courseName=${courseName}&stepNumber=${stepNumber}`;
-            const problemListObject = await requestor.PostJson("./0.4.6/php/GetProblems.php", body);
+            const problemListObject = await requestor.PostJson("./0.4.7/php/GetProblems.php", body);
 
             // 8.7. 문제 목록에 추가한다.
             problemList.SetObject(problemListObject);
@@ -147,7 +147,7 @@ export class IndexForm extends CompositeWindow {
             // 8.8. 서버에 풀이 데이터를 요청한다.
             const solutionBook = new SolutionBook();
             body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const solutionBookObject = await requestor.PostJson("./0.4.6/php/GetCurrentApplySolutions.php", body);
+            const solutionBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplySolutions.php", body);
 
             // 8.9. 풀이 책에 추가한다.
             solutionBook.SetObject(solutionBookObject, problemList);
@@ -156,7 +156,7 @@ export class IndexForm extends CompositeWindow {
             // 8.10. 서버에 피드백 데이터를 요청한다.
             const feedbackBook = new FeedbackBook();
             body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const feedbackBookObject = await requestor.PostJson("./0.4.6/php/GetCurrentApplyFeedbacks.php", body);
+            const feedbackBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyFeedbacks.php", body);
 
             // 8.11. 피드백 책에 추가한다.
             feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
@@ -170,7 +170,7 @@ export class IndexForm extends CompositeWindow {
             // 8.12. 서버에 질문 데이터를 요청한다.
             const questionBook = new QuestionBook();
             body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const questionBookObject = await requestor.PostJson("./0.4.6/php/GetCurrentApplyQuestions.php", body);
+            const questionBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyQuestions.php", body);
 
             // 8.13. 질문 책에 추가한다.
             questionBook.SetObject(questionBookObject, problemList, solutionBook);
@@ -179,7 +179,7 @@ export class IndexForm extends CompositeWindow {
             // 8.14. 서버에 답변 데이터를 요청한다.
             const answerBook = new AnswerBook();
             body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const answerBookObject = await requestor.PostJson("./0.4.6/php/GetCurrentApplyAnswers.php", body);
+            const answerBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyAnswers.php", body);
 
             // 8.15. 답변 책에 추가한다.
             answerBook.SetObject(answerBookObject, problemList, solutionBook, questionBook);
@@ -190,7 +190,7 @@ export class IndexForm extends CompositeWindow {
 
             // 8.17. 서버에 책갈피 데이터를 요청한다.
             body = `emailAddress=${menteeCard.emailAddress}`;
-            const bookmarkCardObject = await requestor.PostJson("./0.4.6/php/GetBookmark.php", body);
+            const bookmarkCardObject = await requestor.PostJson("./0.4.7/php/GetBookmark.php", body);
 
             // 8.18. 책갈피 카드에 추가한다.
             bookmarkCard.SetObject(bookmarkCardObject);
