@@ -70,7 +70,7 @@ export class PlayShelf extends BusinessObjects {
             solutionBook = playCase.GetAt(1);
             integrateSolutionBook = solutionBook.GetIntegrateObject(time);
             integrateCase.Add(integrateSolutionBook);
-            
+
             questionBook = playCase.GetAt(3);
             integrateQuestionBook = questionBook.GetIntegrateObject(time);
             integrateCase.Add(integrateQuestionBook);
@@ -99,7 +99,7 @@ export class PlayShelf extends BusinessObjects {
             feedbackBook = playCase.GetAt(2);
             integrateFeedbackBook = feedbackBook.GetIntegrateObject(time);
             integrateCase.Add(integrateFeedbackBook);
-            
+
             answerBook = playCase.GetAt(4);
             integrateAnswerBook = answerBook.GetIntegrateObject(time);
             integrateCase.Add(integrateAnswerBook);
@@ -164,6 +164,27 @@ export class PlayCase extends BusinessObjects {
                 default: break;
             }
             i++;
+        }
+    }
+
+    UpdateApplyState() {
+        this._applyCard.state = "DEAD";
+        if (this._applyCard.isPaid === true) {
+            let problemList = this._objects[0];
+            let lastProblem = problemList.GetAt(problemList.length - 1);
+            
+            let solutionBook = this._objects[1];
+            let listIndex = solutionBook.Find(lastProblem.chapterNumber, lastProblem.number);
+            let finishIndex = -1;
+            if (listIndex != -1) {
+                let solutionList = solutionBook.GetAt(listIndex);
+                finishIndex = solutionList.FindFinished();
+            }
+            // 마지막 문제의 풀이가 없거나
+            // 마지막 문제의 풀이 중에 완료가 없으면 alive
+            if (listIndex === -1 || finishIndex === -1) {
+                this._applyCard.state = "ALIVE";
+            }
         }
     }
 }

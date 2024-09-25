@@ -26,7 +26,6 @@ export class IndexForm extends CompositeWindow {
         this.element.logicalObject = this;
 
         this.element.addEventListener("load", this.OnLoaded.bind(this));
-        // window.addEventListener("beforeunload", this.OnBeforeUnloaded.bind(this));
         this.element.tabIndex = -1; // enable focus = enable key action
         this.element.addEventListener("keydown", this.OnKeyDown.bind(this));
 
@@ -34,6 +33,7 @@ export class IndexForm extends CompositeWindow {
 
         this._frame = null;
         this._subject = null;
+        this._beforeUnloadedHandler = this.OnBeforeUnloaded.bind(this);
     }
 
     get frame() {
@@ -162,6 +162,11 @@ export class IndexForm extends CompositeWindow {
             feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
             playCase.Add(feedbackBook);
 
+            // 풀이들 상태를 수정한다.
+            feedbackBook.UpdateSolutionStates();
+            // 신청 상태를 수정한다.
+            playCase.UpdateApplyState();
+
             // 8.12. 서버에 질문 데이터를 요청한다.
             const questionBook = new QuestionBook();
             body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
@@ -257,45 +262,10 @@ export class IndexForm extends CompositeWindow {
         frameController.Change(bookmarkCard.childForm);
     }
 
-    // async OnBeforeUnloaded() {
-    //     const requestor = new PhpRequestor();
-    //     const menteeCard = MenteeCard.GetInstance();
-    //     const mentoCard = MentoCard.GetInstance();
-    //     if (mentoCard.length > 0) {
-    //         const emailAddress = mentoCard.emailAddress;
-    //         const time = mentoCard.time;
-
-    //         const playShelf = PlayShelf.GetInstance();
-    //         const integratePlayShelf = playShelf.GetMentoIntegrateObject(time);
-    //         const feedbacksAndAnswers = JSON.stringify(integratePlayShelf);
-
-    //         // 서버에 데이터 결합을 요청한다.
-    //         await requestor.Post("./0.4.6/php/IntegrateMento.php",
-    //             "emailAddress=" + emailAddress +
-    //             "&playShelf=" + feedbacksAndAnswers);
-    //     }
-    //     else if (menteeCard.length > 0) {
-    //         const emailAddress = menteeCard.emailAddress;
-    //         const time = menteeCard.time;
-
-    //         const applyBook = ApplyBook.GetInstance();
-    //         const integrateApplyBook = applyBook.GetIntegrateObject(time);
-    //         const applies = JSON.stringify(integrateApplyBook);
-
-    //         const playShelf = PlayShelf.GetInstance();
-    //         const integratePlayShelf = playShelf.GetMenteeIntegrateObject(time);
-    //         const solutionsAndQuestions = JSON.stringify(integratePlayShelf);
-
-    //         const bookmarkCard = BookmarkCard.GetInstance();
-    //         const integrateBookmarkCard = bookmarkCard.GetIntegrateObject();
-    //         const bookmark = JSON.stringify(integrateBookmarkCard);
-    //         // 서버에 데이터 결합을 요청한다.
-    //         await requestor.Post("./0.4.6/php/IntegrateMentee.php",
-    //             "emailAddress=" + emailAddress +
-    //             "&applyBook=" + applies + "&playShelf=" + solutionsAndQuestions + "&bookmarkCard=" + bookmark);
-    //     }
-    //     console.log("111");
-    // }
+    async OnBeforeUnloaded(event) {
+        event.preventDefault();
+        event.returnValue = true;
+    }
 
     async OnKeyDown(event) {
         if (event.ctrlKey && event.keyCode == 81) { // Ctrl Q

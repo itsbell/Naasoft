@@ -106,6 +106,14 @@ export class SolutionList extends BusinessObjects {
         return index;
     }
 
+    EncodeContent(index) {
+        let solution = this._objects[index];
+        solution = new Solution(solution.time, solution.state, solution.number, encodeURIComponent(solution.content), solution.image);
+        this._objects[index] = solution;
+
+        return index;
+    }
+
     SetObject(object, problemList) {
         const problemObject = object._problem;
         const chapterNumber = parseInt(problemObject._chapterNumber);
@@ -169,7 +177,9 @@ export class SolutionList extends BusinessObjects {
         while (i < this._length) {
             solution = this._objects[i];
             if (solution.time.IsGreaterThan(time) === true) {
-                integrateList.Add(solution);
+                solution = solution.Clone();
+                let index = integrateList.Add(solution);
+                integrateList.EncodeContent(index);
             }
             i++;
         }
@@ -215,6 +225,10 @@ export class Solution extends BusinessObject {
 
     set image(image) {
         this._image = image;
+    }
+
+    Clone() {
+        return new Solution(this._time, this._state, this._number, this._content, this._image);
     }
 
     SetObject(object) {

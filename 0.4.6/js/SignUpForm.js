@@ -42,6 +42,9 @@ export class SignUpForm extends CompositeWindow {
 
         const privacy = document.getElementById("PRIVACY");
         privacy.addEventListener("click", this.OnPrivacyClicked);
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnAuthenticateCodeButtonClicked() {

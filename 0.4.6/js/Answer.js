@@ -177,7 +177,7 @@ export class AnswerCard extends BusinessObjects {
         }
     }
 
-    Correct(time) {
+    Correct(index, time) {
         let answer = this._objects[0];
         answer = new Answer(time, answer.content);
         this._objects[0] = answer;
@@ -185,12 +185,22 @@ export class AnswerCard extends BusinessObjects {
         return 0;
     }
 
+    EncodeContent(index) {
+        let answer = this._objects[index];
+        answer = new Answer(answer.time, encodeURIComponent(answer.content));
+        this._objects[index] = answer;
+
+        return index;
+    }
+
     GetIntegrateObject(time) {
         const integrateCard = new AnswerCard(this._problem, this._solution, this._question);
 
         let answer = this._objects[0];
         if (answer.time.IsGreaterThan(time) === true) {
-            integrateCard.Add(answer);
+            answer = answer.Clone();
+            let index = integrateCard.Add(answer);
+            integrateCard.EncodeContent(index);
         }
 
         return integrateCard;
@@ -211,6 +221,10 @@ export class Answer extends BusinessObject {
 
     get content() {
         return this._content;
+    }
+
+    Clone() {
+        return new Answer(this._time, this._content);
     }
 
     SetObject(object) {

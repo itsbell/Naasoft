@@ -63,7 +63,7 @@ export class BookmarkForm extends CompositeWindow {
         let i = 0;
         while (i < response.length) {
             workList.Add(
-                "solution",
+                "Solution",
                 new DateTime(response[i].time),
                 response[i].menteeName,
                 response[i].menteeEmailAddress,
@@ -81,7 +81,7 @@ export class BookmarkForm extends CompositeWindow {
         i = 0;
         while (i < response.length) {
             workList.Add(
-                "question",
+                "Question",
                 new DateTime(response[i].time),
                 response[i].menteeName,
                 response[i].menteeEmailAddress,
@@ -128,10 +128,10 @@ export class BookmarkForm extends CompositeWindow {
 
             let content;
             // 두 번째 열
-            if (work.type === "solution") {
+            if (work.type === "Solution") {
                 content = `${work.menteeName}이(가) ${work.stepNumber}단계 ${work.chapterNumber}장 문제${work.problemNumber} 풀이${work.solutionNumber}을(를) 제출했습니다.`;
             }
-            else if (work.type === "question") {
+            else if (work.type === "Question") {
                 content = `${work.menteeName}이(가) ${work.stepNumber}단계 ${work.chapterNumber}장 문제${work.problemNumber} 풀이${work.solutionNumber}에 질문을 남겼어요.`;
             }
             table.SetItemText(i, 1, content);

@@ -981,7 +981,7 @@ class InsertSolutionQuery extends DatabaseQuery
         $chapterNumber = $params[3];
         $problemNumber = $params[4];
         $number = $params[5];
-        $content = $params[6];
+        $content = mysqli_real_escape_string($this->connection, $params[6]);
         $image = $params[7];
 
         $stmt = $this->connection->prepare(
@@ -1030,8 +1030,11 @@ class InsertQuestionQuery extends DatabaseQuery
 
     public function Query(...$params)
     {
+
+        $content = mysqli_real_escape_string($this->connection, $params[7]);
+
         $this->connection->query("CALL InsertToQuestion(\"$params[0]\", \"$params[1]\", $params[2],
-            $params[3], $params[4], $params[5], $params[6], \"$params[7]\")");
+            $params[3], $params[4], $params[5], $params[6], \"$content\")");
 
         $queryResult = $this->connection->query(
             "SELECT Question.time From Question
@@ -1254,10 +1257,12 @@ class InsertFeedbackQuery extends DatabaseQuery
 
     public function Query(...$params)
     {
+        $content = mysqli_real_escape_string($this->connection, $params[8]);
+
         $this->connection->query(
             "CALL InsertToFeedback(\"$params[0]\", \"$params[1]\",
                 \"$params[2]\", $params[3], 
-                $params[4], $params[5], $params[6], $params[7], \"$params[8]\")"
+                $params[4], $params[5], $params[6], $params[7], \"$content\")"
         );
 
         $queryResult = $this->connection->query(
@@ -1288,10 +1293,12 @@ class InsertAnswerQuery extends DatabaseQuery
 
     public function Query(...$params)
     {
+        $content = mysqli_real_escape_string($this->connection, $params[8]);
+
         $this->connection->query(
             "CALL InsertToAnswer(\"$params[0]\", \"$params[1]\",
                 \"$params[2]\", $params[3], 
-                $params[4], $params[5], $params[6], $params[7], \"$params[8]\")"
+                $params[4], $params[5], $params[6], $params[7], \"$content\")"
         );
 
         $queryResult = $this->connection->query(
@@ -1412,7 +1419,7 @@ class IntegrateMenteeQuery extends DatabaseQuery
             while ($j < $solutionList->GetLength()) {
                 $solution = $solutionList->GetAt($j);
                 $time = $solution->GetTime()->GetString();
-                $content = $solution->GetContent();
+                $content = mysqli_real_escape_string($this->connection, $solution->GetContent());
                 $image = $solution->GetImage();
 
                 $dataURL = $image;
@@ -1435,7 +1442,7 @@ class IntegrateMenteeQuery extends DatabaseQuery
                 $array = $queryResult->fetch_array();
 
                 // 다르면 갱신한다.
-                if ($time != $array[0] || $content != $array[1] || $imageData != $array[2]) {
+                if ($time != $array[0] || $content != $array[1] || ($imageData != $array[2] && $imageData != "")) {
                     $stmt = $this->connection->prepare(
                         "UPDATE Solution 
                          SET Solution.time = \"$time\", Solution.content = \"$content\", Solution.image = ?
@@ -1465,7 +1472,7 @@ class IntegrateMenteeQuery extends DatabaseQuery
             while ($j < $questionList->GetLength()) {
                 $question = $questionList->GetAt($j);
                 $time = $question->GetTime()->GetString();
-                $content = $question->GetContent();
+                $content = mysqli_real_escape_string($this->connection, $question->GetContent());
 
                 $chapterNumber = $problem->GetChapterNumber();
                 $problemNumber = $problem->GetNumber();
@@ -1548,7 +1555,7 @@ class IntegrateMentoQuery extends DatabaseQuery
             while ($j < $feedbackList->GetLength()) {
                 $feedback = $feedbackList->GetAt($j);
                 $time = $feedback->GetTime()->GetString();
-                $content = $feedback->GetContent();
+                $content = mysqli_real_escape_string($this->connection, $feedback->GetContent());
                 $evaluate = $feedback->GetEvaluate();
 
                 // 다른지 확인한다.
@@ -1583,7 +1590,7 @@ class IntegrateMentoQuery extends DatabaseQuery
 
             $answer = $answerCard->GetAt(0);
             $time = $answer->GetTime()->GetString();
-            $content = $answer->GetContent();
+            $content = mysqli_real_escape_string($this->connection, $answer->GetContent());
 
             // 다른지 확인한다.
             $queryResult = $this->connection->query(

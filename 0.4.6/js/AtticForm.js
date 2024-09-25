@@ -45,6 +45,8 @@ export class AtticForm extends CompositeWindow {
 
     async OnLoaded() {
         window.top.document.title = "다락방";
+        window.top.addEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler); // 원래 추가돼있으면 알아서 삭제해준다.
+
         const applyBook = ApplyBook.GetInstance();
 
         // 2. 사이드바를 만든다.
@@ -167,6 +169,8 @@ export class AtticForm extends CompositeWindow {
         // 그러나 더더욱 이상하게도 위처럼 Get을 한 번 하고 나서 이동하면 indexedDB가 비워진다.
 
         // 3. 초기로 이동한다.
+        window.top.removeEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler);
+        
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
         frameController.Change("INITIALFORM");

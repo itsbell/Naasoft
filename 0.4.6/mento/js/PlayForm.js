@@ -151,14 +151,6 @@ export class PlayForm extends CompositeWindow {
                 sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
             }
         }
-
-        // 4. SideBar를 보여준다.
-        setTimeout(function () {
-            let index = this.Find("SIDEBAR");
-            if (index != -1) {
-                this.GetAt(index).Show();
-            }
-        }.bind(this), 30);
     }
 
     async OnUpButtonClicked() {

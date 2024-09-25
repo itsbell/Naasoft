@@ -59,14 +59,17 @@ export class AbilityForm extends CompositeWindow {
             let j;
             let columnCount = 6;
             let stepIndex;
+            let stepList;
             let step;
             let buttonElement;
             let button;
             let i = 0;
             while (i <= index) {
                 applyCard = applyBook.GetAt(i);
-                stepIndex = stepBook.Find(applyCard.courseName, applyCard.stepNumber);
-                step = stepBook.GetAt(stepIndex).GetAt(0);
+                stepIndex = stepBook.Find(applyCard.courseName);
+                stepList = stepBook.GetAt(stepIndex);
+                stepIndex = stepList.Find(applyCard.stepNumber);
+                step = stepList.GetAt(stepIndex);
                 trElement = document.createElement("tr");
                 trElement.id = "TR" + i;
                 trElement.className = "contentBox";
@@ -271,6 +274,11 @@ export class AbilityForm extends CompositeWindow {
                 // 8. 피드백 책에 추가한다.
                 feedbackBook.SetObject(feedbackBookObject);
                 playCase.Add(feedbackBook);
+
+                // 풀이들 상태를 수정한다.
+                feedbackBook.UpdateSolutionStates();
+                // 신청 상태를 수정한다.
+                playCase.UpdateApplyState();
 
                 // 9. 서버에 질문과 답변 데이터를 요청한다.
                 const questionBook = new QuestionBook();

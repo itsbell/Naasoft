@@ -103,6 +103,14 @@ export class QuestionList extends BusinessObjects {
         return index;
     }
 
+    EncodeContent(index) {
+        let question = this._objects[index];
+        question = new Question(question.number, question.time, encodeURIComponent(question.content));
+        this._objects[index] = question;
+
+        return index;
+    }
+
     Find(number) {
         let i = 0;
         let index = -1;
@@ -161,7 +169,9 @@ export class QuestionList extends BusinessObjects {
         while (i < this._length) {
             question = this._objects[i];
             if (question.time.IsGreaterThan(time) === true) {
-                integrateList.Add(question);
+                question = question.Clone();
+                let index = integrateList.Add(question);
+                integrateList.EncodeContent(index);
             }
             i++;
         }
@@ -189,6 +199,10 @@ export class Question extends BusinessObject {
 
     get content() {
         return this._content;
+    }
+
+    Clone() {
+        return new Question(this._number, this._time, this._content);
     }
 
     SetObject(object) {

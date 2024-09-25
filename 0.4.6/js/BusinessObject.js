@@ -7,6 +7,10 @@ export class BusinessObject {
         return -1;
     }
 
+    Clone() {
+
+    }
+
     // Find(key) {
     //     return -1;
     // }

@@ -5,6 +5,7 @@ import { Table, Tr, Td } from "./Table.js"
 import { Button } from "./Buttons.js";
 import { IndexForm } from "./IndexForm.js";
 import { PlayShelf } from "./Play.js";
+import { FrameController } from "./FrameController.js";
 
 export class ProgressForm extends CompositeWindow {
     constructor(id) {

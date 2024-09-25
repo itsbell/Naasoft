@@ -202,6 +202,9 @@ export class ApplyForm extends CompositeWindow {
 
         const atticButton = new Button("ATTICBUTTON", "다락방 들어가기", this.OnAtticButtonClicked.bind(this));
         this.Add(atticButton);
+
+        const indexForm = IndexForm.GetInstance();
+        indexForm.Notify();
     }
 
     async OnPayButtonClicked() {

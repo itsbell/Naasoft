@@ -36,8 +36,6 @@ export class SolveForm extends CompositeWindow {
 
     async SubmitFeedback(evaluate, content) {
         if (this.isFeedbackSubmitted === false) {
-            let postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-            postContent = postContent.replace(/"/g, '\\"');   // escape quotes
 
             const requestor = new PhpRequestor();
             const playForm = PlayForm.GetInstance();
@@ -81,9 +79,10 @@ export class SolveForm extends CompositeWindow {
 
             let feedback = new Feedback(null, content, evaluate);
             index = feedbackList.Add(feedback);
+            feedback = feedbackList.GetAt(index);
 
             // 4. 서버에 피드백 추가를 요청한다.
-            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&evaluate=${evaluate}&content=${postContent}`;
+            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&evaluate=${feedback.evaluate}&content=${encodeURIComponent(feedback.content)}`;
             let response = await requestor.PostJson("../../php/InsertFeedback.php", body);
 
             this.isFeedbackSubmitted = true;
@@ -126,8 +125,6 @@ export class SolveForm extends CompositeWindow {
 
     async SubmitAnswer(questionNumber, content) {
         if (this.isAnswerSubmitted === false) {
-            let postContent = content.replace(/\\/g, '\\\\'); // 역슬래시 하나를 역슬래시 두개로 바꾸기
-            postContent = postContent.replace(/"/g, '\\"');   // escape quotes
 
             const playForm = PlayForm.GetInstance();
             const requestor = new PhpRequestor();
@@ -168,17 +165,18 @@ export class SolveForm extends CompositeWindow {
             answerBook.Add(answerCard);
 
             let answer = new Answer(null, content);
-            answerCard.Add(answer);
+            index = answerCard.Add(answer);
+            answer = answerCard.GetAt(index);
 
             // 4. 서버에 답변 추가를 요청한다.
-            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&questionNumber=${questionNumber}&content=${postContent}`;
+            let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&questionNumber=${questionNumber}&content=${encodeURIComponent(answer.content)}`;
             let response = await requestor.PostJson("../../php/InsertAnswer.php", body);
 
             this.isAnswerSubmitted = true;
 
             // 3. indexedDB에 놀이 책장을 저장한다.
             let time = new DateTime(response.time);
-            answerCard.Correct(time);
+            answerCard.Correct(index, time);
 
             indexedDB.Put("PlayShelf", playShelf);
 
@@ -360,7 +358,7 @@ export class SolveForm extends CompositeWindow {
             this.Add(qnaView);
 
             // 책갈피의 정보에 따라 피드백 또는 질문답변을 열다.
-            if (bookmarkCard.type === "Feedback") {
+            if (bookmarkCard.type === "Solution") {
                 solutionView.ClickFeedback();
             }
             else if (bookmarkCard.type == "Question" || bookmarkCard.type == "Answer") {

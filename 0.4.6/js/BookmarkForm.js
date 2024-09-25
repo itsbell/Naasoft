@@ -8,6 +8,9 @@ import { IndexForm } from "./IndexForm.js";
 import { PlayShelf } from "./Play.js";
 import { IndexedDB } from "./IndexedDB.js";
 import { FrameController } from "./FrameController.js";
+import { FeedbackBook } from "./Feedback.js";
+import { MenteeCard } from "./Mentee.js";
+import { PhpRequestor } from "./PhpRequestor.js";
 
 export class BookmarkForm extends CompositeWindow {
     constructor(id) {
@@ -33,9 +36,30 @@ export class BookmarkForm extends CompositeWindow {
     }
 
     async OnLoaded() {
+        const menteeCard = MenteeCard.GetInstance();
         const playShelf = PlayShelf.GetInstance();
         const playCase = playShelf.GetAt(playShelf.current);
         playCase.Reset();
+
+        const applyCard = playCase.applyCard;
+        const problemList = playCase.GetAt(0);
+        const solutionBook = playCase.GetAt(1);
+        const feedbackBook = playCase.GetAt(2);
+        const questionBook = playCase.GetAt(3);
+        const answerBook = playCase.GetAt(4);
+
+        const requestor = new PhpRequestor();
+        let body = `emailAddress=${menteeCard.emailAddress}&courseName=${applyCard.courseName}&stepNumber=${applyCard.stepNumber}`;
+        const feedbackBookObject = await requestor.PostJson("../php/GetCurrentApplyFeedbacks.php", body);
+        feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
+
+        body = `emailAddress=${menteeCard.emailAddress}&courseName=${applyCard.courseName}&stepNumber=${applyCard.stepNumber}`;
+        const answerBookObject = await requestor.PostJson("../php/GetCurrentApplyAnswers.php", body);
+        answerBook.SetObject(answerBookObject, problemList, solutionBook, questionBook);
+
+        let indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+        await indexedDB.Put("PlayShelf", playShelf);
 
         const bookmarkCard = BookmarkCard.GetInstance();
         /** 1. 책갈피 표를 만든다. */
@@ -57,11 +81,6 @@ export class BookmarkForm extends CompositeWindow {
         }
 
         /** 2. 활동 표를 만든다. */
-        const solutionBook = playCase.GetAt(1);
-        const feedbackBook = playCase.GetAt(2);
-        const questionBook = playCase.GetAt(3);
-        const answerBook = playCase.GetAt(4);
-
         const workList = new WorkList();
         this.workList = workList;
         workList.LoadSolutionBook(solutionBook);
@@ -202,7 +221,7 @@ export class BookmarkForm extends CompositeWindow {
 
         bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "bookmark", applyCard.courseName, applyCard.stepNumber, bookmarkCard.location, 0, 0);
         await indexedDB.Put("BookmarkCard", bookmarkCard);
-        
+
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
         frameController.Change("DESKFORM");
@@ -231,6 +250,11 @@ export class BookmarkForm extends CompositeWindow {
         const MAX = 5;
         const workList = bookmarkForm.workList;
         let pageCount = Math.floor(workList.length / MAX); // 한 페이지에 5개씩
+        remainder = workList.length % MAX;
+        if (remainder != 0) {
+            pageCount++;
+        }
+
         let count = 0;
         let i = first;
         while (i <= pageCount && count < 10) { // 페이지 번호는 최대 10개까지
@@ -359,7 +383,12 @@ export class BookmarkForm extends CompositeWindow {
         /** 번호를 구성한다. */
         const MAX = 5;
         const workList = bookmarkForm.workList;
-        let pageCount = Math.floor(workList.Length / MAX); // 한 페이지에 5개씩
+        let pageCount = Math.floor(workList.length / MAX); // 한 페이지에 5개씩
+        remainder = workList.length % MAX;
+        if (remainder != 0) {
+            pageCount++;
+        }
+
         let count = 0;
         let i = first;
         while (i <= pageCount && count < 10) {

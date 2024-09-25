@@ -103,6 +103,9 @@ export class ApplyCard extends BusinessObjects {
     get state() {
         return this._objects[0].state;
     }
+    set state(state) {
+        this._objects[0].state = state;
+    }
 
     get isPaid() {
         return this._objects[0].isPaid;
@@ -121,6 +124,7 @@ export class ApplyCard extends BusinessObjects {
         this._current = object._current;
 
         let course;
+        let stepList;
         let step;
         const courseObject = object._course;
         const stepObject = object._step;
@@ -131,9 +135,13 @@ export class ApplyCard extends BusinessObjects {
         if (index != -1) {
             course = courseList.GetAt(index);
         }
-        index = stepBook.Find(courseName, stepNumber);
+        index = stepBook.Find(courseName);
         if (index != -1) {
-            step = stepBook.GetAt(index).GetAt(0);
+            stepList = stepBook.GetAt(index);
+            index = stepList.Find(stepNumber);
+            if (index != -1) {
+                step = stepList.GetAt(index);
+            }
         }
         this._course = course;
         this._step = step;
@@ -181,7 +189,6 @@ export class Apply extends BusinessObject {
     get state() {
         return this._state;
     }
-
     set state(state) {
         this._state = state;
     }

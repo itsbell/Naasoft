@@ -2,6 +2,10 @@ import { CompositeWindow } from "./Window.js";
 import { Button } from "./Buttons.js";
 import { ImageView } from "./ImageView.js";
 import { BookmarkCard } from "./Bookmark.js";
+import { PlayShelf } from "./Play.js";
+import { IndexForm } from "./IndexForm.js"
+import { IndexedDB } from "./IndexedDB.js";
+import { FrameController } from "./FrameController.js";
 
 export class SolutionView extends CompositeWindow {
     constructor(id, state) {
@@ -155,43 +159,54 @@ export class SolutionView extends CompositeWindow {
         }
     }
 
-    OnNextProblemButtonClicked() {
-        const problemCard = ProblemCard.GetInstance();
-        const problem = problemCard.GetAt(problemCard.Current);
+    async OnNextProblemButtonClicked() {
+        const playShelf = PlayShelf.GetInstance();
+        let playCase = playShelf.GetAt(playShelf.current);
+        let problemList = playCase.GetAt(0);
+        let problem = problemList.GetAt(problemList.current);
+        let applyCard = playCase.applyCard;
+
         const bookmarkCard = BookmarkCard.GetInstance();
+        bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", applyCard.courseName, applyCard.stepNumber, problem.chapterNumber, problem.number + 1, 0);
 
-        bookmarkCard.TakeIn("play", "", "", "", 0, problem.ChapterNumber, parseInt(problem.Number) + 1, 0);
+        let indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+        await indexedDB.Put("BookmarkCard", bookmarkCard);
 
-        let sessionStorage = new SessionStorage;
-        sessionStorage.SetBookmarkCard(bookmarkCard);
-
-        // window.top.location.href = "/play";
-        window.top.location.href = "../play.php";
+        const indexForm = IndexForm.GetInstance();
+        let frameController = new FrameController(indexForm);
+        frameController.Change("PLAYFORM");
     }
 
-    OnNextChapterButtonClicked() {
-        const problemCard = ProblemCard.GetInstance();
-        const problem = problemCard.GetAt(problemCard.Current);
+    async OnNextChapterButtonClicked() {
+        const playShelf = PlayShelf.GetInstance();
+        let playCase = playShelf.GetAt(playShelf.current);
+        let problemList = playCase.GetAt(0);
+        let problem = problemList.GetAt(problemList.current);
+        let applyCard = playCase.applyCard;
+
         const bookmarkCard = BookmarkCard.GetInstance();
+        bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", applyCard.courseName, applyCard.stepNumber, problem.chapterNumber + 1, 0, 0);
 
-        bookmarkCard.TakeIn("play", "", "bookmark", "", 0, parseInt(problem.ChapterNumber) + 1, 0, 0);
+        let indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+        await indexedDB.Put("BookmarkCard", bookmarkCard);
 
-        let sessionStorage = new SessionStorage;
-        sessionStorage.SetBookmarkCard(bookmarkCard);
-
-        // window.top.location.href = "/desk";
-        window.top.location.href = "../desk.php";
+        const indexForm = IndexForm.GetInstance();
+        let frameController = new FrameController(indexForm);
+        frameController.Change("DESKFORM");
     }
 
-    OnNextBookButtonClicked() {
+    async OnNextBookButtonClicked() {
         const bookmarkCard = BookmarkCard.GetInstance();
+        bookmarkCard.Correct(0, bookmarkCard.location, "ATTICFORM", "PROGRESSFORM", "", "", 0, -1, 0, 0);
 
-        bookmarkCard.TakeIn("attic", "첫 번째 질", "", "", 0, -1, 0, 0);
+        let indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+        await indexedDB.Put("BookmarkCard", bookmarkCard);
 
-        let sessionStorage = new SessionStorage;
-        sessionStorage.SetBookmarkCard(bookmarkCard);
-
-        // window.top.location.href = "/attic";
-        window.top.location.href = "../attic.php";
+        const indexForm = IndexForm.GetInstance();
+        let frameController = new FrameController(indexForm);
+        frameController.Change("ATTICFORM");
     }
 }

@@ -50,7 +50,7 @@ export class HistoryController extends Observer {
             const childForm = this._form.frame.contentDocument.getElementById(this._form.frame.id).logicalObject;
             childFormId = childForm.id;
 
-            if (childForm.frame.contentDocument.getElementById(childForm.frame.id) != null) {
+            if (childForm.frame != undefined) { // SignUp, FindPassword Form인 경우
                 const grandChildForm = childForm.frame.contentDocument.getElementById(childForm.frame.id).logicalObject;
                 grandChildFormId = grandChildForm.id;
             }
@@ -58,7 +58,7 @@ export class HistoryController extends Observer {
             const bookmarkCard = BookmarkCard.GetInstance();
             if (bookmarkCard.length > 0) {
                 type = bookmarkCard.type;
-                chapterNumber = bookmarkCard.chapterNumber;
+                chapterNumber = bookmarkCard.chapterNumber; // DeskForm인 경우
             }
 
             const applyBook = ApplyBook.GetInstance();

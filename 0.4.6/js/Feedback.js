@@ -129,6 +129,14 @@ export class FeedbackList extends BusinessObjects {
         return index;
     }
 
+    Correct(index) {
+        let feedback = this._objects[index];
+        feedback = new Feedback(feedback.time, encodeURIComponent(feedback.content), feedback.evaluate);
+        this._objects[index] = feedback;
+
+        return index;
+    }
+
     GetIntegrateObject(time) {
         const integrateList = new FeedbackList(this._problem, this._solution);
 
@@ -137,7 +145,9 @@ export class FeedbackList extends BusinessObjects {
         while (i < this._length) {
             feedback = this._objects[i];
             if (feedback.time.IsGreaterThan(time) === true) {
-                integrateList.Add(feedback);
+                feedback = feedback.Clone();
+                let index = integrateList.Add(feedback);
+                integrateList.EncodeContent(index);
             }
             i++;
         }
@@ -165,6 +175,10 @@ export class Feedback extends BusinessObject {
 
     get evaluate() {
         return this._evaluate;
+    }
+
+    Clone() {
+        return new Feedback(this._time, this._content, this._evaluate);
     }
 
     SetObject(object) {
