@@ -55,6 +55,8 @@ export class ApplyForm extends CompositeWindow {
             let jsonText = JSON.stringify(payment);
             window.top.sessionStorage.setItem("Payment", jsonText);
 
+            window.top.removeEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler);
+
             // 1.1.6. 결제로 이동한다.
             window.top.location.href = "../pay/pay.php";
         }
@@ -70,7 +72,7 @@ export class ApplyForm extends CompositeWindow {
         // 1. 제목을 만든다.
         let courseIndex = 0;
         let stepIndex = 0;
-        let stepCard;
+        let stepList;
         // 1.1. 신청이 있으면 (최근)
         if (applyBook.length > 0) {
             const applyCard = applyBook.GetAt(applyBook.length - 1);
@@ -80,16 +82,16 @@ export class ApplyForm extends CompositeWindow {
             if (applyCard.isPaid === false) {
                 courseIndex = stepBook.Find(currentCourseName);
                 if (courseIndex != -1) {
-                    stepCard = stepBook.GetAt(courseIndex);
-                    stepIndex = stepCard.Find(currentStepNumber);
+                    stepList = stepBook.GetAt(courseIndex);
+                    stepIndex = stepList.Find(currentStepNumber);
                 }
             }
             // 1.1.2. 결제가 있으면 신청의 다음 단계로 만든다.
             else {
                 courseIndex = stepBook.Find(currentCourseName);
                 if (courseIndex != -1) {
-                    stepCard = stepBook.GetAt(courseIndex);
-                    stepIndex = stepCard.Find(currentStepNumber + 1);
+                    stepList = stepBook.GetAt(courseIndex);
+                    stepIndex = stepList.Find(currentStepNumber + 1);
                     if (stepIndex == -1) {
                         courseIndex++;
                         stepIndex = 0;
@@ -102,9 +104,9 @@ export class ApplyForm extends CompositeWindow {
                 stepIndex = 0;
             }
         }
-        stepCard = stepBook.GetAt(courseIndex);
-        let step = stepCard.GetAt(stepIndex);
-        this.courseName = stepCard.courseName;
+        stepList = stepBook.GetAt(courseIndex);
+        let step = stepList.GetAt(stepIndex);
+        this.courseName = stepList.courseName;
         this.stepNumber = step.number;
         this.stepPrice = Math.floor(step.price);
 
@@ -227,9 +229,9 @@ export class ApplyForm extends CompositeWindow {
                 // 1.2.2. 단계를 찾는다.
                 const stepBook = StepBook.GetInstance();
                 index = stepBook.Find(this.courseName);
-                const stepCard = stepBook.GetAt(index);
-                index = stepCard.Find(this.stepNumber);
-                const step = stepCard.GetAt(index);
+                const stepList = stepBook.GetAt(index);
+                index = stepList.Find(this.stepNumber);
+                const step = stepList.GetAt(index);
                 // 1.2.3. 신청 카드를 만든다.
                 const applyCard = new ApplyCard(course, step);
                 // 1.2.4. 신청을 만든다.

@@ -56,6 +56,42 @@ export class FeedbackBook extends BusinessObjects {
 
         return integrateBook;
     }
+
+    GetState() {
+        let state = "WAIT";
+
+        if (this._length > 0) {
+            state = "PASS";
+        }
+
+        let i = 0;
+        while (i < this._length && this._objects[i].evaluate != -2) {
+            i++;
+        }
+        if (i < this._length) {
+            state = "FAIL";
+        }
+
+        i = 0;
+        while (i < this._length && this._objects[i].evaluate != -1) {
+            i++;
+        }
+        if (i < this._length) {
+            state = "FINISH";
+        }
+
+        return state;
+    }
+
+    UpdateSolutionStates() {
+        let feedbackList;
+        let i = 0;
+        while (i < this._length) {
+            feedbackList = this._objects[i];
+            feedbackList.solution.state = feedbackList.GetState();
+            i++;
+        }
+    }
 }
 
 export class FeedbackList extends BusinessObjects {
@@ -129,7 +165,7 @@ export class FeedbackList extends BusinessObjects {
         return index;
     }
 
-    Correct(index) {
+    EncodeContent(index) {
         let feedback = this._objects[index];
         feedback = new Feedback(feedback.time, encodeURIComponent(feedback.content), feedback.evaluate);
         this._objects[index] = feedback;

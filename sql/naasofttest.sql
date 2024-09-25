@@ -34,7 +34,6 @@ authenticationCode CHAR(6) NOT NULL
 
 CREATE TABLE Apply (
 time DATETIME NOT NULL,
-state VARCHAR(16) NOT NULL DEFAULT 'DEAD' CHECK(state IN ('DEAD', 'ALIVE')),
 start DATETIME NULL,
 end DATETIME NULL,
 applyCode CHAR(18) NOT NULL,
@@ -73,7 +72,6 @@ chapterNumber INT NOT NULL,
 problemNumber INT NOT NULL,
 number INT NOT NULL,
 time DATETIME NOT NULL,
-state VARCHAR(16) NOT NULL DEFAULT 'WAIT' CHECK(state IN ('PASS', 'FAIL', 'WAIT', 'FINISH')),
 content TEXT NOT NULL,
 image MEDIUMBLOB NOT NULL,
 solutionCode CHAR(18) NOT NULL,
@@ -93,7 +91,6 @@ CONSTRAINT MentoPK PRIMARY KEY(mentoCode)
 
 CREATE TABLE Feedback (
 time DATETIME NOT NULL,
-state VARCHAR(16) NOT NULL DEFAULT 'UNCHECKED' CHECK(state IN ('UNCHECKED', 'CHECKED')),
 evaluate INT NOT NULL DEFAULT 0,
 content TEXT NOT NULL,
 feedbackCode CHAR(18) NOT NULL,
@@ -110,7 +107,6 @@ problemNumber INT NOT NULL,
 solutionNumber INT NOT NULL,
 number INT NOT NULL,
 time DATETIME NOT NULL,
-state VARCHAR(16) NOT NULL DEFAULT 'UNCHECKED' CHECK(state IN ('UNCHECKED', 'CHECKED')),
 content TEXT NOT NULL,
 questionCode CHAR(18) NOT NULL,
 applyCode CHAR(18) NOT NULL,
@@ -120,7 +116,6 @@ CONSTRAINT Apply_QuestionFK FOREIGN KEY(applyCode) REFERENCES Apply(applyCode)
 
 CREATE TABLE Answer (
 time DATETIME NOT NULL,
-state VARCHAR(16) NOT NULL DEFAULT 'UNCHECKED' CHECK(state IN ('UNCHECKED', 'CHECKED')),
 content TEXT NOT NULL,
 answerCode CHAR(18) NOT NULL,
 mentoCode CHAR(9) NOT NULL,
@@ -774,18 +769,6 @@ SELECT Apply.applyCode INTO applyCode FROM Apply WHERE Apply.menteeCode = mentee
 RETURN applyCode;
 END//
 
-CREATE FUNCTION GetSolutionNumber(applyCode CHAR(18), chapterNumber INT, problemNumber INT) RETURNS INT
-BEGIN
-DECLARE newNumber INT;
-DECLARE oldNumber INT;
-SELECT Solution.number INTO oldNumber FROM Solution WHERE Solution.applyCode = applyCode AND Solution.chapterNumber = chapterNumber AND Solution.problemNumber = problemNumber ORDER BY Solution.number DESC LIMIT 1;
-SET newNumber = 1;
-IF (oldNumber IS NOT NULL) THEN
-SET newNumber = oldNumber + 1;
-END IF;
-RETURN newNumber;
-END//
-
 CREATE FUNCTION GetSolutionCodeByNumbersAndApplyCode(chapterNumber INT, problemNumber INT, number INT, applyCode CHAR(18)) RETURNS CHAR(18)
 BEGIN
 DECLARE solutionCode CHAR(18);
@@ -973,7 +956,7 @@ SET time = NOW();
 SELECT Apply.applyCode INTO applyCode FROM Apply WHERE Apply.menteeCode = menteeCode ORDER BY Apply.time DESC LIMIT 1;
 UPDATE Apply 
 INNER JOIN Step ON Step.stepCode = Apply.stepCode 
-SET Apply.state = "ALIVE", Apply.start = time, Apply.end = DATE_ADD(time, INTERVAL Step.period DAY) 
+SET Apply.start = time, Apply.end = DATE_ADD(time, INTERVAL Step.period DAY) 
 WHERE Apply.applyCode = applyCode;
 
 INSERT INTO Payment (orderId, orderName, price, time, paymentCode, applyCode)
@@ -1037,63 +1020,6 @@ BEGIN
     INSERT INTO Evaluate(evaluateCode, solutionCode) VALUES(GetEvaluateCode(), solutionCode);
 END//
 
-CREATE PROCEDURE GetFromSolution(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN number INT, OUT time DATETIME, OUT state VARCHAR(16), OUT content TEXT, OUT abstract INT, OUT logical INT, OUT solve INT, OUT critical INT, OUT language INT, OUT debugging INT)
-BEGIN
-DECLARE menteeCode CHAR(9);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-DECLARE solutionCode CHAR(18);
-DECLARE problemCode CHAR(7);
-DECLARE problemEvaluate INT;
-DECLARE value INT;
-DECLARE result INT;
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
-SET solutionCode = GetSolutionCodeByNumbersAndApplyCode(chapterNumber, problemNumber, number, applyCode);
-SELECT Solution.time, Solution.state, Solution.content INTO time, state, content FROM Solution WHERE Solution.solutionCode = solutionCode;
-SET problemCode = GetProblemCodeByNumbersAndStepCode(chapterNumber, problemNumber, stepCode);
-SELECT Problem.evaluate INTO problemEvaluate FROM Problem WHERE Problem.problemCode = problemCode;
-SET value = 1;
-SET result = problemEvaluate & value;
-SET abstract = -1;
-if(result > 0) THEN
-SET abstract = 5;
-END IF;
-SET value = value << 1;
-SET result = problemEvaluate & value;
-SET logical = -1;
-if(result > 0) THEN
-SET logical = 5;
-END IF;
-SET value = value << 1;
-SET result = problemEvaluate & value;
-SET solve = -1;
-if(result > 0) THEN
-SET solve = 5;
-END IF;
-SET value = value << 1;
-SET result = problemEvaluate & value;
-SET critical = -1;
-if(result > 0) THEN
-SET critical = 5;
-END IF;
-SET value = value << 1;
-SET result = problemEvaluate & value;
-SET language = -1;
-if(result > 0) THEN
-SET language = 5;
-END IF;
-SET value = value << 1;
-SET result = problemEvaluate & value;
-SET debugging = -1;
-if(result > 0) THEN
-SET debugging = 5;
-END IF;
-END//
-
 CREATE PROCEDURE GetImageFromSolution(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN number INT, OUT image MEDIUMBLOB)
 BEGIN
 DECLARE menteeCode CHAR(9);
@@ -1145,59 +1071,56 @@ SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
 SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
 SET solutionCode = GetSolutionCodeByNumbersAndApplyCode(chapterNumber, problemNumber, solutionNumber, applyCode);
 SELECT COUNT(*) INTO feedbackCount FROM Feedback WHERE Feedback.solutionCode = solutionCode;
+
 IF(feedbackCount < 1) THEN
-SET problemCode = GetProblemCodeByNumbersAndStepCode(chapterNumber, problemNumber, stepCode);
-SELECT Problem.evaluate INTO problemEvaluate FROM Problem WHERE Problem.problemCode = problemCode;
-SET evaluateCode = MakeEvaluate(problemEvaluate, solutionCode);
+    SET problemCode = GetProblemCodeByNumbersAndStepCode(chapterNumber, problemNumber, stepCode);
+    SELECT Problem.evaluate INTO problemEvaluate FROM Problem WHERE Problem.problemCode = problemCode;
+    SET evaluateCode = MakeEvaluate(problemEvaluate, solutionCode);
 END IF;
+
 INSERT INTO Feedback(time, evaluate, content, feedbackCode, mentoCode, solutionCode)
 VALUES(NOW(), evaluate, content, GetFeedbackCode(), mentoCode, solutionCode);
+
 IF(evaluate = -1) THEN
-UPDATE Solution SET Solution.state = "FINISH" WHERE Solution.solutionCode = solutionCode;
-SELECT Problem.chapterNumber INTO lastChapterNumber FROM Problem WHERE Problem.stepCode = stepCode ORDER BY Problem.chapterNumber DESC LIMIT 1;
-SELECT Problem.number INTO lastProblemNumber FROM Problem WHERE Problem.stepCode = stepCode AND Problem.chapterNumber = lastChapterNumber ORDER BY Problem.number DESC LIMIT 1;
-IF(chapterNumber = lastChapterNumber AND problemNumber = lastProblemNumber) THEN
-UPDATE Apply SET Apply.state = "DEAD" WHERE Apply.applyCode = applyCode;
-UPDATE Apply SET Apply.end = NOW() WHERE Apply.applyCode = applyCode;
-END IF;
-ELSEIF(evaluate = 0) THEN
-IF((SELECT Solution.state FROM Solution WHERE Solution.solutionCode = solutionCode) = "WAIT") THEN
-UPDATE Solution SET Solution.state = "PASS" WHERE Solution.solutionCode = solutionCode;
-END IF;
-ELSE
-UPDATE Solution SET Solution.state = "FAIL" WHERE Solution.solutionCode = solutionCode;
-IF(evaluate = 1) THEN
-UPDATE Evaluate SET Evaluate.abstract = Evaluate.abstract - 1 WHERE Evaluate.solutionCode = solutionCode;
-ELSEIF(evaluate = 2) THEN
-UPDATE Evaluate SET Evaluate.logical = Evaluate.logical - 1 WHERE Evaluate.solutionCode = solutionCode;
-ELSEIF(evaluate = 3) THEN
-UPDATE Evaluate SET Evaluate.solve = Evaluate.solve - 1 WHERE Evaluate.solutionCode = solutionCode;
-ELSEIF(evaluate = 4) THEN
-UPDATE Evaluate SET Evaluate.critical = Evaluate.critical - 1 WHERE Evaluate.solutionCode = solutionCode;
-ELSEIF(evaluate = 5) THEN
-UPDATE Evaluate SET Evaluate.language = Evaluate.language - 1 WHERE Evaluate.solutionCode = solutionCode;
-ELSEIF(evaluate = 6) THEN
-UPDATE Evaluate SET Evaluate.debugging = Evaluate.debugging - 1 WHERE Evaluate.solutionCode = solutionCode;
+    SELECT Problem.chapterNumber INTO lastChapterNumber FROM Problem WHERE Problem.stepCode = stepCode ORDER BY Problem.chapterNumber DESC LIMIT 1;
+    SELECT Problem.number INTO lastProblemNumber FROM Problem WHERE Problem.stepCode = stepCode AND Problem.chapterNumber = lastChapterNumber ORDER BY Problem.number DESC LIMIT 1;
+    IF(chapterNumber = lastChapterNumber AND problemNumber = lastProblemNumber) THEN
+        UPDATE Apply SET Apply.end = NOW() WHERE Apply.applyCode = applyCode;
+    END IF;
+
 ELSEIF(evaluate = -2) THEN
-IF((SELECT Evaluate.abstract FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.abstract = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-IF((SELECT Evaluate.logical FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.logical = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-IF((SELECT Evaluate.solve FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.solve = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-IF((SELECT Evaluate.critical FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.critical = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-IF((SELECT Evaluate.language FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.language = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-IF((SELECT Evaluate.debugging FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
-UPDATE Evaluate SET Evaluate.debugging = 0 WHERE Evaluate.solutionCode = solutionCode;
-END IF;
-END IF;
+    IF(evaluate = 1) THEN
+        UPDATE Evaluate SET Evaluate.abstract = Evaluate.abstract - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = 2) THEN
+        UPDATE Evaluate SET Evaluate.logical = Evaluate.logical - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = 3) THEN
+        UPDATE Evaluate SET Evaluate.solve = Evaluate.solve - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = 4) THEN
+        UPDATE Evaluate SET Evaluate.critical = Evaluate.critical - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = 5) THEN
+        UPDATE Evaluate SET Evaluate.language = Evaluate.language - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = 6) THEN
+        UPDATE Evaluate SET Evaluate.debugging = Evaluate.debugging - 1 WHERE Evaluate.solutionCode = solutionCode;
+    ELSEIF(evaluate = -2) THEN
+        IF((SELECT Evaluate.abstract FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.abstract = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+        IF((SELECT Evaluate.logical FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.logical = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+        IF((SELECT Evaluate.solve FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.solve = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+        IF((SELECT Evaluate.critical FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.critical = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+        IF((SELECT Evaluate.language FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.language = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+        IF((SELECT Evaluate.debugging FROM Evaluate WHERE Evaluate.solutionCode = solutionCode) != -1) THEN
+            UPDATE Evaluate SET Evaluate.debugging = 0 WHERE Evaluate.solutionCode = solutionCode;
+        END IF;
+    END IF;
 END IF;
 END//
 
@@ -1215,23 +1138,6 @@ SELECT Solution.solutionCode INTO solutionCode FROM Solution
 WHERE Solution.applyCode = applyCode AND Solution.chapterNumber = chapterNumber AND Solution.problemNumber = problemNumber AND Solution.number = number;
 END//
 
-CREATE PROCEDURE CheckToFeedback(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT)
-BEGIN
-DECLARE menteeCode CHAR(9);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-DECLARE solutionCode CHAR(18);
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
-SELECT Solution.solutionCode INTO solutionCode FROM Solution
-WHERE Solution.applyCode = applyCode AND Solution.chapterNumber = chapterNumber AND Solution.problemNumber = problemNumber AND Solution.number = solutionNumber;
-UPDATE Feedback SET Feedback.state = "CHECKED"
-WHERE Feedback.solutionCode = solutionCode;
-END//
-
 CREATE PROCEDURE InsertToQuestion(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT, IN number INT, IN content TEXT)
 BEGIN
 DECLARE menteeCode CHAR(9);
@@ -1244,20 +1150,6 @@ SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
 SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
 INSERT INTO Question(chapterNumber, problemNumber, solutionNumber, number, time, content, questionCode, applyCode)
 VALUES(chapterNumber, problemNumber, solutionNumber, number, NOW(), content, GetQuestionCode(), applyCode);
-END//
-
-CREATE PROCEDURE CheckToQuestion(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT)
-BEGIN
-DECLARE menteeCode CHAR(9);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
-UPDATE Question SET Question.state = "CHECKED"
-WHERE Question.applyCode = applyCode AND Question.chapterNumber = chapterNumber AND Question.problemNumber = problemNumber AND Question.solutionNumber = solutionNumber;
 END//
 
 CREATE PROCEDURE InsertToAnswer(IN mentoEmailAddress VARCHAR(250), IN menteeEmailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT, IN questionNumber INT ,IN content TEXT)
@@ -1276,51 +1168,6 @@ SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
 SET questionCode = GetQuestionCodeByNumbersAndApplyCode(chapterNumber, problemNumber, solutionNumber, questionNumber, applyCode);
 INSERT INTO Answer(time, content, answerCode, mentoCode, questionCode)
 VALUES(NOW(), content, GetAnswerCode(), mentoCode, questionCode);
-UPDATE Question SET Question.state = "CHECKED" WHERE Question.questionCode = questionCode;
-END//
-
-CREATE PROCEDURE CheckToAnswer(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN solutionNumber INT)
-BEGIN
-DECLARE menteeCode CHAR(9);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
-UPDATE Answer
-INNER JOIN Question ON Question.applyCode = applyCode AND Question.chapterNumber = chapterNumber AND Question.problemNumber = problemNumber AND Question.solutionNumber = solutionNumber
-SET Answer.state = "CHECKED"
-WHERE Answer.questionCode = Question.questionCode;
-END//
-
-CREATE PROCEDURE ApplyAndPaymentTest(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT)
-BEGIN
-DECLARE i INT;
-DECLARE orderName VARCHAR(64);
-DECLARE price DECIMAL(15, 2);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-DECLARE menteeCode CHAR(9);
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET i = 1;
-WHILE(i < stepNumber) DO
-SET orderName = CONCAT(courseName, CAST(i AS CHAR(2)));
-SET orderName = CONCAT(orderName, "단계");
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, i);
-SELECT Step.price INTO price FROM Step WHERE Step.stepCode = stepCode;
-SET applyCode = GetApplyCode();
-INSERT INTO Apply (time, applyCode, menteeCode, stepCode) VALUES (NOW(), applyCode, menteeCode, stepCode);
-UPDATE Apply SET Apply.state = "ALIVE" WHERE Apply.applyCode = applyCode;
-INSERT INTO Payment (orderId, orderName, price, time, paymentCode, applyCode)
-VALUES (GetOrderId(), orderName, price, NOW(), GetPaymentCode(), applyCode);
-UPDATE Apply SET Apply.state = "DEAD" WHERE Apply.applyCode = applyCode;
-DO SLEEP(1);
-SET i = i + 1;
-END WHILE;
 END//
 
 CREATE PROCEDURE GetAbstractAverageFromEvaluate(IN emailAddress VARCHAR(250), OUT second FLOAT, OUT first FLOAT, OUT now FLOAT)
@@ -1485,6 +1332,32 @@ UPDATE Mentee SET Mentee.name = "퇴거자", Mentee.emailAddress = GetRandomStri
 SET result = 1;
 END//
 
+CREATE PROCEDURE ApplyAndPaymentTest(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT)
+BEGIN
+DECLARE i INT;
+DECLARE orderName VARCHAR(64);
+DECLARE price DECIMAL(15, 2);
+DECLARE courseCode CHAR(4);
+DECLARE stepCode CHAR(6);
+DECLARE applyCode CHAR(18);
+DECLARE menteeCode CHAR(9);
+SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
+SET courseCode = GetCourseCodeByName(courseName);
+SET i = 1;
+WHILE(i < stepNumber) DO
+SET orderName = CONCAT(courseName, CAST(i AS CHAR(2)));
+SET orderName = CONCAT(orderName, "단계");
+SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, i);
+SELECT Step.price INTO price FROM Step WHERE Step.stepCode = stepCode;
+SET applyCode = GetApplyCode();
+INSERT INTO Apply (time, applyCode, menteeCode, stepCode) VALUES (NOW(), applyCode, menteeCode, stepCode);
+INSERT INTO Payment (orderId, orderName, price, time, paymentCode, applyCode)
+VALUES (GetOrderId(), orderName, price, NOW(), GetPaymentCode(), applyCode);
+DO SLEEP(1);
+SET i = i + 1;
+END WHILE;
+END//
+
 CREATE PROCEDURE ClearAboutMentee(IN emailAddress VARCHAR(250))
 BEGIN
 DECLARE menteeCode CHAR(9);
@@ -1526,25 +1399,10 @@ VALUES(name, emailAddress, password, NOW(), menteeCode);
 SET stepCode = "ST0001";
 SET applyCode = GetApplyCode();
 SELECT Step.period, Step.price INTO period, price FROM Step WHERE Step.stepCode = stepCode;
-INSERT INTO Apply(time, state, start, end, applyCode, menteeCode, stepCode)
-VALUES(NOW(), "ALIVE", NOW(), DATE_ADD(NOW(), INTERVAL period DAY), applyCode, menteeCode, stepCode);
+INSERT INTO Apply(time, start, end, applyCode, menteeCode, stepCode)
+VALUES(NOW(), NOW(), DATE_ADD(NOW(), INTERVAL period DAY), applyCode, menteeCode, stepCode);
 INSERT INTO Payment(orderId, orderName, price, time, paymentCode, applyCode)
 VALUES(GetOrderId(), "1단계", price, NOW(), GetPaymentCode(), applyCode);
-END//
-
-CREATE PROCEDURE GetStateFromSolution(IN emailAddress VARCHAR(250), IN courseName VARCHAR(32), IN stepNumber INT, IN chapterNumber INT, IN problemNumber INT, IN number INT, OUT state VARCHAR(16))
-BEGIN
-DECLARE menteeCode CHAR(9);
-DECLARE courseCode CHAR(4);
-DECLARE stepCode CHAR(6);
-DECLARE applyCode CHAR(18);
-DECLARE solutionCode CHAR(18);
-SET menteeCode = GetMenteeCodeByEmailAddress(emailAddress);
-SET courseCode = GetCourseCodeByName(courseName);
-SET stepCode = GetStepCodeByCourseCodeAndNumber(courseCode, stepNumber);
-SET applyCode = GetApplyCodeByMenteeCodeAndStepCode(menteeCode, stepCode);
-SET solutionCode = GetSolutionCodeByNumbersAndApplyCode(chapterNumber, problemNumber, number, applyCode);
-SELECT Solution.state INTO state FROM Solution WHERE Solution.solutionCode = solutionCode;
 END//
 
 DELIMITER ;
@@ -1560,7 +1418,9 @@ INNER JOIN Apply ON Apply.applyCode = Solution.applyCode
 INNER JOIN Mentee ON Mentee.menteeCode = Apply.menteeCode
 INNER JOIN Step ON Step.stepCode = Apply.stepCode
 INNER JOIN Course ON Course.courseCode = Step.courseCode
-WHERE Solution.state = "WAIT" ORDER BY Solution.time ASC;
+LEFT JOIN Feedback ON Feedback.solutionCode = Solution.solutionCode
+WHERE Feedback.solutionCode IS NULL
+ORDER BY Solution.time ASC;
 
 CREATE VIEW ViewQuestionWork AS
 SELECT Question.time AS QuestionTime, Mentee.name AS MenteeName, Mentee.emailAddress AS MenteeEmailAddress, Course.name AS CourseName, Step.number AS StepNumber, Question.chapterNumber AS QuestionChapterNumber, Question.problemNumber AS QuestionProblemNumber, Question.solutionNumber AS QuestionSolutionNumber
@@ -1569,7 +1429,9 @@ INNER JOIN Apply ON Apply.applyCode = Question.applyCode
 INNER JOIN Mentee ON Mentee.menteeCode = Apply.menteeCode
 INNER JOIN Step ON Step.stepCode = Apply.stepCode
 INNER JOIN Course ON Course.courseCode = Step.courseCode
-WHERE Question.state = "UNCHECKED" ORDER BY Question.time ASC;
+LEFT JOIN Answer ON Answer.questionCode = Question.questionCode
+WHERE Answer.questionCode IS NULL
+ORDER BY Question.time ASC;
 
 CREATE VIEW ViewMentee AS
 SELECT Mentee.name AS MenteeName, Mentee.emailAddress AS MenteeEmailAddress, 
@@ -1582,7 +1444,7 @@ ORDER BY Mentee.name ASC;
 
 CREATE VIEW ViewSolutionExceptImage AS
 SELECT Solution.chapterNumber AS chapterNumber, Solution.problemNumber AS problemNumber, Solution.number AS number,
-Solution.time AS time, Solution.state AS state, Solution.content AS content, Solution.solutionCode AS solutionCode, Solution.applyCode AS applyCode
+Solution.time AS time, Solution.content AS content, Solution.solutionCode AS solutionCode, Solution.applyCode AS applyCode
 FROM Solution;
 
 CREATE VIEW ViewTableSize AS

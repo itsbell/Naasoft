@@ -198,10 +198,6 @@ export class SolveForm extends CompositeWindow {
                 solution.image = image;
             }
 
-            // 4. 서버에 풀이 상태 데이터를 요청한다.
-            const state = await requestor.Post("../php/GetSolutionState.php", body);
-            solution.state = state;
-
             // 5. 서버에 피드백 데이터를 요청한다.
             let feedbackList = null;
             const feedbackListObject = await requestor.PostJson("../php/GetSolutionFeedbacks.php", body);
@@ -210,6 +206,11 @@ export class SolveForm extends CompositeWindow {
                 feedbackList = feedbackBook.GetAt(index);
                 feedbackList.SetObject(feedbackListObject, problemList, solutionBook);
             }
+
+            // 풀이들 상태를 수정한다.
+            feedbackBook.UpdateSolutionStates();
+            // 신청 상태를 수정한다.
+            playCase.UpdateApplyState();
 
             // 6. 서버에 답변 데이터를 요청한다.
             const answerBookPartObject = await requestor.PostJson("../php/GetSolutionAnswers.php", body);

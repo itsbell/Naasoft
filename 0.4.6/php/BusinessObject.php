@@ -134,7 +134,7 @@ class StepBook extends BusinessObjects
     }
 }
 
-class StepCard extends BusinessObjects
+class StepList extends BusinessObjects
 {
     private $course;
 

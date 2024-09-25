@@ -76,7 +76,7 @@ export class ProgressForm extends CompositeWindow {
 
         let courseIndex = 0;
         let stepIndex = 0;
-        let stepCard;
+        let stepList;
         if (applyBook.length > 0) {
             const applyCard = applyBook.GetAt(applyBook.length - 1);
             const currentCourseName = applyCard.courseName;
@@ -84,15 +84,15 @@ export class ProgressForm extends CompositeWindow {
             if (applyCard.isPaid === false) {
                 courseIndex = stepBook.Find(currentCourseName);
                 if (courseIndex != -1) {
-                    stepCard = stepBook.GetAt(courseIndex);
-                    stepIndex = stepCard.Find(currentStepNumber);
+                    stepList = stepBook.GetAt(courseIndex);
+                    stepIndex = stepList.Find(currentStepNumber);
                 }
             }
             else {
                 courseIndex = stepBook.Find(currentCourseName);
                 if (courseIndex != -1) {
-                    stepCard = stepBook.GetAt(courseIndex);
-                    stepIndex = stepCard.Find(currentStepNumber + 1);
+                    stepList = stepBook.GetAt(courseIndex);
+                    stepIndex = stepList.Find(currentStepNumber + 1);
                     if (stepIndex == -1) {
                         courseIndex++;
                         stepIndex = 0;
@@ -105,9 +105,9 @@ export class ProgressForm extends CompositeWindow {
                 stepIndex = 0;
             }
         }
-        stepCard = stepBook.GetAt(courseIndex);
-        let step = stepCard.GetAt(stepIndex);
-        this.courseName = stepCard.courseName;
+        stepList = stepBook.GetAt(courseIndex);
+        let step = stepList.GetAt(stepIndex);
+        this.courseName = stepList.courseName;
         this.stepNumber = step.number;
         this.stepPrice = Math.floor(step.price);
 
@@ -136,9 +136,9 @@ export class ProgressForm extends CompositeWindow {
             const course = courseList.GetAt(index);
             // 2.2.2. 단계를 찾는다.
             index = stepBook.Find(this.courseName);
-            const stepCard = stepBook.GetAt(index);
-            index = stepCard.Find(this.stepNumber);
-            const step = stepCard.GetAt(index);
+            const stepList = stepBook.GetAt(index);
+            index = stepList.Find(this.stepNumber);
+            const step = stepList.GetAt(index);
             // 2.2.3. 신청 카드를 만든다.
             const applyCard = new ApplyCard(course, step);
             // 2.2.4. 신청을 만든다. TODO: 서버 시간으로 고치기

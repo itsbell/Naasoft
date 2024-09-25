@@ -78,8 +78,6 @@ class DatabaseQueryFactory
             $query = new TotalAbilityQuery();
         } else if ($type == "GetSolutionImage") {
             $query = new GetSolutionImageQuery();
-        } else if ($type == "GetSolutionState") {
-            $query = new GetSolutionStateQuery();
         } else if ($type == "GetSolutionFeedbacks") {
             $query = new GetSolutionFeedbacksQuery();
         } else if ($type == "GetSolutionAnswers") {
@@ -110,6 +108,8 @@ class DatabaseQueryFactory
             $query = new IntegrateMenteeQuery();
         } else if ($type == "IntegrateMento") {
             $query = new IntegrateMentoQuery();
+        } else if ($type == "LeaveMentee") {
+            $query = new LeaveMenteeQuery();
         }
 
         return $query;
@@ -170,10 +170,10 @@ class GetAllStepQuery extends DatabaseQuery
             $index = $stepBook->Find($row[0]);
             if ($index == -1) {
                 $course = new Course($row[0]);
-                $stepCard = new StepCard($course);
-                $stepBook->Add($stepCard);
+                $stepList = new StepList($course);
+                $stepBook->Add($stepList);
             } else {
-                $stepCard = $stepBook->GetAt($index);
+                $stepList = $stepBook->GetAt($index);
             }
 
             $step = new Step(
@@ -182,7 +182,7 @@ class GetAllStepQuery extends DatabaseQuery
                 $row[3],
                 $row[4]
             );
-            $stepCard->Add($step);
+            $stepList->Add($step);
         }
 
         $json = $stepBook->Expose();
@@ -420,7 +420,7 @@ class GetAllApplyQuery extends DatabaseQuery
     public function Query(...$params)
     {
         $queryResult = $this->connection->query(
-            "SELECT Course.name, Step.number, Apply.time, Apply.state, Payment.orderId, Apply.start, Apply.end FROM Apply 
+            "SELECT Course.name, Step.number, Apply.time, Payment.orderId, Apply.start, Apply.end FROM Apply 
             LEFT JOIN Payment ON Payment.applyCode = Apply.applyCode 
             LEFT JOIN Step ON Step.stepCode = Apply.stepCode 
             LEFT JOIN Course ON Course.courseCode = Step.courseCode 
@@ -442,12 +442,12 @@ class GetAllApplyQuery extends DatabaseQuery
             }
 
             $time = new NDateTime($row[2]);
-            $start = new NDateTime($row[5]);
-            $end = new NDateTime($row[6]);
+            $start = new NDateTime($row[4]);
+            $end = new NDateTime($row[5]);
             $apply = new Apply(
                 $time,
-                $row[3],
-                ($row[4] != null) ? (true) : (false),
+                "DEAD",
+                ($row[3] != null) ? (true) : (false),
                 $start,
                 $end
             );
@@ -507,20 +507,20 @@ class GetCurrentApplySolutionsQuery extends DatabaseQuery
     {
         $this->connection->query("CALL GetCodeFromApplyByEmailAddressAndCourseNameAndStepNumber(\"$params[0]\", \"$params[1]\", $params[2], @applyCode)");
         $queryResult = $this->connection->query(
-            "SELECT Solution.time, Solution.state, Solution.chapterNumber, Solution.problemNumber, Solution.number, Solution.content
+            "SELECT Solution.time, Solution.chapterNumber, Solution.problemNumber, Solution.number, Solution.content
             FROM Solution WHERE Solution.applyCode = @applyCode ORDER BY Solution.time"
         );
 
         $solutionBook = new SolutionBook();
         while ($row = mysqli_fetch_array($queryResult)) {
-            $index = $solutionBook->Find((int)$row[2], (int)$row[3]);
+            $index = $solutionBook->Find((int)$row[1], (int)$row[2]);
             if ($index == -1) {
-                $problem = new Problem((int)$row[2], (int)$row[3], null, null, null);
+                $problem = new Problem((int)$row[1], (int)$row[2], null, null, null);
                 $index = $solutionBook->Add(new SolutionList($problem));
             }
             $solutionList = $solutionBook->GetAt($index);
             $time = new NDateTime($row[0]);
-            $solution = new Solution($time, $row[1], (int)$row[4], $row[5], null);
+            $solution = new Solution($time, "WAIT", (int)$row[3], $row[4], null);
             $solutionList->Add($solution);
         }
         $json = $solutionBook->Expose();
@@ -825,32 +825,6 @@ class GetSolutionImageQuery extends DatabaseQuery
     }
 }
 
-class GetSolutionStateQuery extends DatabaseQuery
-{
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    function __destruct()
-    {
-        parent::__destruct();
-    }
-
-    public function Query(...$params)
-    {
-        $this->connection->query("CALL GetStateFromSolution(\"$params[0]\", \"$params[1]\", $params[2],
-            $params[3], $params[4], $params[5], @state)");
-        $queryResult = $this->connection->query("SELECT @state");
-
-        $array = $queryResult->fetch_array();
-
-        $result = $array[0];
-
-        return $result;
-    }
-}
-
 class GetSolutionFeedbacksQuery extends DatabaseQuery
 {
     public function __construct()
@@ -981,7 +955,7 @@ class InsertSolutionQuery extends DatabaseQuery
         $chapterNumber = $params[3];
         $problemNumber = $params[4];
         $number = $params[5];
-        $content = mysqli_real_escape_string($this->connection, $params[6]);
+        $content = $params[6];
         $image = $params[7];
 
         $stmt = $this->connection->prepare(
@@ -1030,7 +1004,6 @@ class InsertQuestionQuery extends DatabaseQuery
 
     public function Query(...$params)
     {
-
         $content = mysqli_real_escape_string($this->connection, $params[7]);
 
         $this->connection->query("CALL InsertToQuestion(\"$params[0]\", \"$params[1]\", $params[2],
@@ -1402,7 +1375,7 @@ class IntegrateMenteeQuery extends DatabaseQuery
         $array = $queryResult->fetch_array();
 
         $location = $bookmarkCard->GetChapterNumber();
-        if ($array[0] != $location) {
+        if ($array != null && $array[0] != $location) {
             $this->connection->query(
                 "UPDATE Bookmark SET Bookmark.location = $location WHERE Bookmark.applyCode = @applyCode"
             );
@@ -1448,10 +1421,12 @@ class IntegrateMenteeQuery extends DatabaseQuery
                          SET Solution.time = \"$time\", Solution.content = \"$content\", Solution.image = ?
                          WHERE Solution.solutionCode = \"$array[3]\""
                     );
-    
+
                     $null = NULL;
                     $stmt->bind_param("b", $null);
-                    $stmt->send_long_data(0, $imageData);
+                    if ($imageData != "") {
+                        $stmt->send_long_data(0, $imageData);
+                    }
                     $stmt->execute();
                 }
 
@@ -1612,5 +1587,30 @@ class IntegrateMentoQuery extends DatabaseQuery
 
             $i++;
         }
+    }
+}
+
+class LeaveMenteeQuery extends DatabaseQuery
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    function __destruct()
+    {
+        parent::__destruct();
+    }
+
+    public function Query(...$params)
+    {
+        $this->connection->query("CALL LeaveFromMentee(\"$params[0]\", @result)");
+        $queryResult = $this->connection->query("SELECT @result");
+
+        $array = $queryResult->fetch_array();
+
+        $result = $array[0];
+
+        return $result;
     }
 }

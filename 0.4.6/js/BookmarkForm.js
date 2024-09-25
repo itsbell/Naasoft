@@ -53,6 +53,11 @@ export class BookmarkForm extends CompositeWindow {
         const feedbackBookObject = await requestor.PostJson("../php/GetCurrentApplyFeedbacks.php", body);
         feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
 
+        // 풀이들 상태를 수정한다.
+        feedbackBook.UpdateSolutionStates();
+        // 신청 상태를 수정한다.
+        playCase.UpdateApplyState();
+
         body = `emailAddress=${menteeCard.emailAddress}&courseName=${applyCard.courseName}&stepNumber=${applyCard.stepNumber}`;
         const answerBookObject = await requestor.PostJson("../php/GetCurrentApplyAnswers.php", body);
         answerBook.SetObject(answerBookObject, problemList, solutionBook, questionBook);

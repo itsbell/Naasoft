@@ -1,9 +1,11 @@
 <?php
-require_once("./Mentoring.php");
+require_once("./DatabaseQuery.php");
 
-$mentoring = new Mentoring();
-$result = $mentoring->LeaveMentee($_POST['emailAddress']);
+$result = "";
+$factory = new DatabaseQueryFactory();
+$query = $factory->Make("LeaveMentee");
+if ($query != null) {
+    $result = $query->Query($_POST["emailAddress"]);
+}
 
 echo $result;
-
-?>
