@@ -209,11 +209,6 @@ export class MainForm extends CompositeWindow {
                 feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
                 playCase.Add(feedbackBook);
 
-                // 풀이들 상태를 수정한다.
-                feedbackBook.UpdateSolutionStates();
-                // 신청 상태를 수정한다.
-                playCase.UpdateApplyState();
-
                 // 2.2.16. 서버에 질문 데이터를 요청한다.
                 const questionBook = new QuestionBook();
                 body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;

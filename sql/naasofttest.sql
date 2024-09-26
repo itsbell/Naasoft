@@ -1088,7 +1088,7 @@ IF(evaluate = -1) THEN
         UPDATE Apply SET Apply.end = NOW() WHERE Apply.applyCode = applyCode;
     END IF;
 
-ELSEIF(evaluate = -2) THEN
+ELSEIF(evaluate != 0) THEN
     IF(evaluate = 1) THEN
         UPDATE Evaluate SET Evaluate.abstract = Evaluate.abstract - 1 WHERE Evaluate.solutionCode = solutionCode;
     ELSEIF(evaluate = 2) THEN

@@ -213,7 +213,9 @@
     width: 400px;
     max-height: 80%;
     background-color: white;
-    padding: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -244,7 +246,6 @@
 #QNALISTCTRL_BODY {
     overflow-y: auto;
     flex-grow: 1;
-    width: calc(100% - 20px);
 }
 
 #QNALISTCTRL_BODY::-webkit-scrollbar {

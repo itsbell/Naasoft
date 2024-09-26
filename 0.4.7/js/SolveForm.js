@@ -38,7 +38,6 @@ export class SolveForm extends CompositeWindow {
             this._isSubmitted = true;
 
             const requestor = new PhpRequestor();
-            const playForm = PlayForm.GetInstance();
             const playShelf = PlayShelf.GetInstance();
             const applyBook = ApplyBook.GetInstance();
             const menteeCard = MenteeCard.GetInstance();
@@ -59,9 +58,6 @@ export class SolveForm extends CompositeWindow {
             const problemNumber = problem.number;
             const solutionNumber = solution.number;
 
-            playForm.Element.className = "waiting";
-            this.element.className = "waiting";
-
             let questionList = null;
             let index = questionBook.Find(chapterNumber, problemNumber, solutionNumber);
             if (index === -1) {
@@ -80,6 +76,7 @@ export class SolveForm extends CompositeWindow {
 
             let time = new DateTime(response.time);
             questionList.Correct(index, time);
+
             const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
             await indexedDB.Open();
             await indexedDB.Put("PlayShelf", playShelf);
@@ -94,7 +91,6 @@ export class SolveForm extends CompositeWindow {
 
     async UpdateQnA() {
         const bookmarkCard = BookmarkCard.GetInstance();
-        const playForm = PlayForm.GetInstance();
         const playShelf = PlayShelf.GetInstance();
         const playCase = playShelf.GetAt(playShelf.current);
         const questionBook = playCase.GetAt(3);
@@ -131,8 +127,6 @@ export class SolveForm extends CompositeWindow {
         await indexedDB.Open();
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 
-        playForm.Element.className = "";
-        this.element.className = "";
         this._isSubmitted = false;
     }
 

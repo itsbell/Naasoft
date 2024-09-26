@@ -221,7 +221,7 @@ export class SolveGround {
         this.y = event.clientY;
 
         let listCtrl = document.getElementById("FEEDBACKLISTCTRL");
-        let top = listCtrl.offsetTop + this.offsetTop;
+        let top = listCtrl.offsetTop + this.offsetTop - listCtrl.scrollTop;
         let left = listCtrl.offsetLeft + this.offsetLeft;
 
         let solveGround = document.getElementById("SOLVEGROUND").logicalObject;

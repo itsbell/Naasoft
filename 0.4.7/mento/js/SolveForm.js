@@ -21,8 +21,8 @@ export class SolveForm extends CompositeWindow {
 
         this.element = document.getElementById(this.id);
         this.element.logicalObject = this;
-        this.isFeedbackSubmitted = false;
-        this.isAnswerSubmitted = false;
+        this._isFeedbackSubmitted = false;
+        this._isAnswerSubmitted = false;
 
         this.element.addEventListener("load", this.OnLoaded.bind(this));
     }
@@ -35,22 +35,14 @@ export class SolveForm extends CompositeWindow {
     }
 
     async SubmitFeedback(evaluate, content) {
-        if (this.isFeedbackSubmitted === false) {
+        if (this._isFeedbackSubmitted === false) {
+            this._isFeedbackSubmitted = true;
 
             const requestor = new PhpRequestor();
-            const playForm = PlayForm.GetInstance();
             const menteeCard = MenteeCard.GetInstance();
             const playShelf = PlayShelf.GetInstance();
             const mentoCard = MentoCard.GetInstance();
 
-            // 1. indexedDB를 연다.
-            const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
-            await indexedDB.Open();
-
-            playForm.Element.className = "waiting";
-            this.element.className = "waiting";
-
-            // 2. 피드백 책에 추가한다.
             const playCase = playShelf.GetAt(playShelf.current);
             const applyCard = playCase.applyCard;
             const problemList = playCase.GetAt(0);
@@ -70,7 +62,7 @@ export class SolveForm extends CompositeWindow {
 
             let feedbackList = null;
             let index = feedbackBook.Find(chapterNumber, problemNumber, solutionNumber);
-            if (index == -1) {
+            if (index === -1) {
                 feedbackList = new FeedbackList(problem, solution);
                 index = feedbackBook.Add(feedbackList);
             }
@@ -81,62 +73,64 @@ export class SolveForm extends CompositeWindow {
             index = feedbackList.Add(feedback);
             feedback = feedbackList.GetAt(index);
 
-            // 4. 서버에 피드백 추가를 요청한다.
             let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&evaluate=${feedback.evaluate}&content=${encodeURIComponent(feedback.content)}`;
             let response = await requestor.PostJson("../../php/InsertFeedback.php", body);
 
-            this.isFeedbackSubmitted = true;
-
-            // 3. indexedDB에 놀이 책장을 저장한다.
             let time = new DateTime(response.time);
             feedbackList.Correct(index, time);
 
-            indexedDB.Put("PlayShelf", playShelf);
+            const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+            await indexedDB.Open();
+            await indexedDB.Put("PlayShelf", playShelf);
 
-            // 5. 피드백 항목을 추가한다.
-            index = this.Find("FEEDBACKVIEW");
-            if (index != -1) {
-                this.GetAt(index).RemoveAllItems();
-                this.Remove(index);
-            }
-
-            const feedbackView = new FeedbackView("FEEDBACKVIEW");
-            let j = 0;
-            while (j < feedbackList.length) {
-                feedback = feedbackList.GetAt(j);
-                feedbackView.AddItem(feedback.content, feedback.evaluate);
-                j++;
-            }
-            feedbackView.SetEditor(problem.evaluate);
-            this.Add(feedbackView);
-
-            index = this.Find("SOLUTIONVIEW");
-            if (index != -1) {
-                let solutionView = this.GetAt(index);
-                solutionView.ClickFeedback();
-            }
-
-            this.isFeedbackSubmitted = false;
-
-            playForm.Element.className = "";
-            this.element.className = "";
+            this.UpdateFeedback();
         }
     }
 
-    async SubmitAnswer(questionNumber, content) {
-        if (this.isAnswerSubmitted === false) {
+    async UpdateFeedback() {
+        const playForm = PlayForm.GetInstance();
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        const problemList = playCase.GetAt(0);
+        const problem = problemList.GetAt(problemList.current);
+        const feedbackBook = playCase.GetAt(2);
+        const feedbackList = feedbackBook.GetAt(feedbackBook.current);
 
-            const playForm = PlayForm.GetInstance();
+        // 5. 피드백 항목을 추가한다.
+        let index = this.Find("FEEDBACKVIEW");
+        if (index != -1) {
+            this.GetAt(index).RemoveAllItems();
+            this.Remove(index);
+        }
+
+        const feedbackView = new FeedbackView("FEEDBACKVIEW");
+        let i = 0;
+        while (i < feedbackList.length) {
+            let feedback = feedbackList.GetAt(i);
+            feedbackView.AddItem(feedback.content, feedback.evaluate);
+            i++;
+        }
+        feedbackView.SetEditor(problem.evaluate);
+        this.Add(feedbackView);
+
+        index = this.Find("SOLUTIONVIEW");
+        if (index != -1) {
+            let solutionView = this.GetAt(index);
+            solutionView.ClickFeedback();
+        }
+
+        this._isFeedbackSubmitted = false;
+    }
+
+    async SubmitAnswer(questionNumber, content) {
+        if (this._isAnswerSubmitted === false) {
+            this._isAnswerSubmitted = true;
+
             const requestor = new PhpRequestor();
+            const mentoCard = MentoCard.GetInstance();
             const menteeCard = MenteeCard.GetInstance();
             const playShelf = PlayShelf.GetInstance();
-            const mentoCard = MentoCard.GetInstance();
 
-            // 1. indexedDB를 연다.
-            const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
-            await indexedDB.Open();
-
-            // 2. 답변 책에 추가한다.
             const playCase = playShelf.GetAt(playShelf.current);
             const applyCard = playCase.applyCard;
             const problemList = playCase.GetAt(0);
@@ -156,8 +150,10 @@ export class SolveForm extends CompositeWindow {
             const mentoEmailAddress = mentoCard.emailAddress;
 
             let index = questionBook.Find(chapterNumber, problemNumber, solutionNumber);
+            questionBook.Move(index);
             const questionList = questionBook.GetAt(index);
             index = questionList.Find(questionNumber);
+            questionList.Move(index);
             let question = questionList.GetAt(index);
 
             let answerCard = null;
@@ -168,54 +164,67 @@ export class SolveForm extends CompositeWindow {
             index = answerCard.Add(answer);
             answer = answerCard.GetAt(index);
 
-            // 4. 서버에 답변 추가를 요청한다.
             let body = `mentoEmailAddress=${mentoEmailAddress}&menteeEmailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}&chapterNumber=${chapterNumber}&problemNumber=${problemNumber}&solutionNumber=${solutionNumber}&questionNumber=${questionNumber}&content=${encodeURIComponent(answer.content)}`;
             let response = await requestor.PostJson("../../php/InsertAnswer.php", body);
 
-            this.isAnswerSubmitted = true;
-
-            // 3. indexedDB에 놀이 책장을 저장한다.
             let time = new DateTime(response.time);
             answerCard.Correct(index, time);
 
-            indexedDB.Put("PlayShelf", playShelf);
+            const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+            await indexedDB.Open();
+            await indexedDB.Put("PlayShelf", playShelf);
 
-            // 5. 답변 항목을 추가한다.
-            index = this.Find("QNAVIEW");
-            if (index != -1) {
-                this.GetAt(index).RemoveAllItems();
-                this.Remove(index);
-            }
-
-            const qnaView = new QnaView("QNAVIEW");
-            let answerIndex;
-            let j = 0;
-            while (j < questionList.length) {
-                question = questionList.GetAt(j);
-                qnaView.AddQuestion(question.content);
-                answerIndex = answerBook.Find(chapterNumber, problemNumber, solutionNumber, question.number);
-                if (answerIndex != -1) {
-                    answerCard = answerBook.GetAt(answerIndex);
-                    qnaView.AddAnswer(answerCard.GetAt(0).content);
-                }
-                else {
-                    qnaView.AddEditor("ANSWEREDITOR" + (j + 1));
-                }
-                j++;
-            }
-            this.Add(qnaView);
-
-            index = this.Find("SOLUTIONVIEW");
-            if (index != -1) {
-                let solutionView = this.GetAt(index);
-                solutionView.ClickQnA();
-            }
-
-            this.isAnswerSubmitted = false;
-
-            playForm.Element.className = "";
-            this.element.className = "";
+            this.UpdateQnA();
         }
+    }
+
+    async UpdateQnA() {
+        const playShelf = PlayShelf.GetInstance();
+        const playCase = playShelf.GetAt(playShelf.current);
+        const problemList = playCase.GetAt(0);
+        const problem = problemList.GetAt(problemList.current);
+        const solutionBook = playCase.GetAt(1);
+        const solutionList = solutionBook.GetAt(solutionBook.current);
+        const solution = solutionList.GetAt(solutionList.current);
+        const questionBook = playCase.GetAt(3);
+        const answerBook = playCase.GetAt(4);
+        const questionList = questionBook.GetAt(questionBook.current);
+
+        const chapterNumber = problem.chapterNumber;
+        const problemNumber = problem.number;
+        const solutionNumber = solution.number;
+
+        let index = this.Find("QNAVIEW");
+        if (index != -1) {
+            this.GetAt(index).RemoveAllItems();
+            this.Remove(index);
+        }
+
+        const qnaView = new QnaView("QNAVIEW");
+        let answerIndex;
+        let i = 0;
+        while (i < questionList.length) {
+            let question = questionList.GetAt(i);
+            qnaView.AddQuestion(question.content);
+            answerIndex = answerBook.Find(chapterNumber, problemNumber, solutionNumber, question.number);
+            if (answerIndex != -1) {
+                let answerCard = answerBook.GetAt(answerIndex);
+                qnaView.AddAnswer(answerCard.GetAt(0).content);
+            }
+            else {
+                qnaView.AddEditor("ANSWEREDITOR" + (i + 1));
+            }
+            i++;
+        }
+        this.Add(qnaView);
+
+        index = this.Find("SOLUTIONVIEW");
+        if (index != -1) {
+            let solutionView = this.GetAt(index);
+            solutionView.ClickQnA();
+        }
+
+        this._isAnswerSubmitted = false;
     }
 
     async OnLoaded() {

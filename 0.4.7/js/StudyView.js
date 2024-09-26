@@ -116,15 +116,16 @@ export class StudyView extends CompositeWindow {
             const sideBar = deskForm.GetAt(index);
             menuText = sideBar.GetSelectedMenuItemText();
             const regex = /[^0-9]/g;
-            chapterNumber = parseInt(menuText.replace(regex, ""));
+            chapterNumber = menuText.replace(regex, "");
             if (chapterNumber === '') {
                 chapterNumber = 0;
             }
-            bookmarkCard.Correct(0, chapterNumber, "", "", "bookmark", "", 0, chapterNumber, 0, 0);
+            bookmarkCard.Correct(0, parseInt(chapterNumber), bookmarkCard.childForm, bookmarkCard.grandChildForm, bookmarkCard.type,
+                bookmarkCard.courseName, bookmarkCard.stepNumber, bookmarkCard.chapterNumber, bookmarkCard.problemNumber, bookmarkCard.solutionNumber);
             await indexedDB.Put("BookmarkCard", bookmarkCard);
         }
 
-        let body = `emailAddress=${menteeCard.emailAddress}&location=${bookmarkCard.chapterNumber}`;
+        let body = `emailAddress=${menteeCard.emailAddress}&location=${bookmarkCard.location}`;
         await phpRequestor.Post("../php/SetBookmark.php", body);
         alert("책갈피가 끼워졌어요.");
     }

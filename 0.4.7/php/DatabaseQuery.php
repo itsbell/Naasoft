@@ -927,7 +927,7 @@ class SetBookmarkQuery extends DatabaseQuery
         $this->connection->query("CALL GetCodeFromCurrentApply(\"$params[0]\", @applyCode)");
         $queryResult = $this->connection->query("SELECT Bookmark.location FROM Bookmark WHERE Bookmark.applyCode = @applyCode");
         $array = $queryResult->fetch_array();
-        if ($array[0] != null) {
+        if ($array != null) {
             $queryResult = $this->connection->query("UPDATE Bookmark SET location = $params[1] WHERE Bookmark.applyCode = @applyCode");
         } else {
             $queryResult = $this->connection->query("INSERT INTO Bookmark(location, applyCode) VALUES($params[1], @applyCode)");
@@ -955,7 +955,7 @@ class InsertSolutionQuery extends DatabaseQuery
         $chapterNumber = $params[3];
         $problemNumber = $params[4];
         $number = $params[5];
-        $content = $params[6];
+        $content = mysqli_real_escape_string($this->connection, $params[6]);
         $image = $params[7];
 
         $stmt = $this->connection->prepare(
