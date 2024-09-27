@@ -38,11 +38,13 @@ export class SolveGround {
         /** FeedbackListCtrl에서 항목을 추가하다. */
         let feedbackCard;
         let subject;
-        let src = null;
+        let src;
         let i = 0;
         while (i < this.feedbackBinder.Length) {
             this.listCtrl.InsertItem(i, i + 1);
 
+            subject = null;
+            src = null;
             feedbackCard = this.feedbackBinder.GetAt(i);
             switch (feedbackCard.Evaluation) {
                 case -2: subject = "평가 불가";
@@ -221,7 +223,8 @@ export class SolveGround {
         this.y = event.clientY;
 
         let listCtrl = document.getElementById("FEEDBACKLISTCTRL");
-        let top = listCtrl.offsetTop + this.offsetTop - listCtrl.scrollTop;
+        let body = listCtrl.logicalObject.body;
+        let top = listCtrl.offsetTop + this.offsetTop - body.scrollTop;
         let left = listCtrl.offsetLeft + this.offsetLeft;
 
         let solveGround = document.getElementById("SOLVEGROUND").logicalObject;
@@ -328,10 +331,11 @@ export class SolveGround {
         if (solveGround.current != null &&
             (solveGround.current.className === "feedbackItem" || solveGround.current.className === "feedbackItem_focus")) {
             const listCtrl = solveGround.listCtrl.element;
-            let left = listCtrl.offsetLeft;
-            let right = listCtrl.offsetLeft + listCtrl.offsetWidth;
-            let top = listCtrl.offsetTop;
-            let bottom = listCtrl.offsetTop + listCtrl.offsetHeight;
+            const listBody = solveGround.listCtrl.body;
+            let left = listCtrl.offsetLeft + listBody.offsetLeft;
+            let right = left + listCtrl.offsetWidth;
+            let top = listCtrl.offsetTop + listBody.offsetTop;
+            let bottom = top + listCtrl.offsetHeight;
             if (event.clientX > left && event.clientX < right &&
                 event.clientY > top && event.clientY < bottom) {
                 if (listCtrl.id !== "FEEDBACKLISTCTRL_FOCUS") {
@@ -351,15 +355,16 @@ export class SolveGround {
         if (solveGround.current != null &&
             (solveGround.current.className === "feedbackItem" || solveGround.current.className === "feedbackItem_focus")) {
             const listCtrl = solveGround.listCtrl.element;
-            let left = listCtrl.offsetLeft;
-            let right = listCtrl.offsetLeft + listCtrl.offsetWidth;
-            let top = listCtrl.offsetTop;
-            let bottom = listCtrl.offsetTop + listCtrl.offsetHeight;
+            const listBody = solveGround.listCtrl.body;
+            let left = listCtrl.offsetLeft + listBody.offsetLeft;
+            let right = left + listCtrl.offsetWidth;
+            let top = listCtrl.offsetTop + listBody.offsetTop;
+            let bottom = top + listCtrl.offsetHeight;
             if (event.clientX > left && event.clientX < right &&
                 event.clientY > top && event.clientY < bottom) {
                 listCtrl.id = "FEEDBACKLISTCTRL";
                 solveGround.current.className = `${listCtrl.logicalObject.id}_item`;
-                listCtrl.appendChild(solveGround.current);
+                listBody.appendChild(solveGround.current);
                 listCtrl.style.zIndex = solveGround.zIndex;
                 solveGround.zIndex++;
 

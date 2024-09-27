@@ -31,6 +31,7 @@ export class IndexedDB {
                     console.error(`Error clearing object store:`, event.target.error);
                     reject(event.target.error);
                 };
+
                 i++;
             }
 
@@ -66,7 +67,7 @@ export class IndexedDB {
         // const transaction = this.db.transaction([storeName], 'readwrite');
         // const objectStore = transaction.objectStore(storeName);
         // objectStore.put(data);
-
+        
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction([storeName], 'readwrite');
             const objectStore = transaction.objectStore(storeName);
@@ -92,7 +93,6 @@ export class IndexedDB {
     }
 
     OnSuccess(event, resolve) {
-        console.log("데이터베이스가 열렸습니다.");
         this.db = event.target.result;
         resolve();
     }

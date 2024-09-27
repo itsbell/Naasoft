@@ -60,6 +60,14 @@ export class ApplyBook extends BusinessObjects {
             index = i;
         }
 
+        i = this._length - 1;
+        while (i >= 0 && this._objects[i].state != "ALIVE") {
+            i--;
+        }
+        if (i >= 0) {
+            index = i;
+        }
+
         return index;
     }
 

@@ -34,8 +34,6 @@ export class PlayForm extends CompositeWindow {
     }
 
     OnLoaded() {
-        window.top.sessionStorage.setItem("PageId", this.id);
-
         const playShelf = PlayShelf.GetInstance();
         const bookmarkCard = BookmarkCard.GetInstance();
 
@@ -138,17 +136,22 @@ export class PlayForm extends CompositeWindow {
                 }
             }
             else {
-                problemList.Move(0);
-                problem = problemList.GetAt(0);
-                solutionListIndex = solutionBook.Find(problem.chapterNumber, problem.number);
-                solutionBook.Move(solutionListIndex);
-                solutionList = solutionBook.GetAt(solutionListIndex);
-                solutionList.Move(0);
-                solution = solutionList.GetAt(0);
+                if (solutionBook.length > 0) {
+                    solutionBook.Move(solutionListIndex);
+                    solutionList = solutionBook.GetAt(0);
 
-                list = sideBar.ClickMenuItemByText(problem.chapterNumber + "장");
-                list = sideBar.ClickMenuItemByText("문제 " + problem.number, list);
-                sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
+                    chapterNumber = solutionList.chapterNumber;
+                    problemNumber = solutionList.problemNumber;
+
+                    problemList.MoveByChapterNumberAndNumber(chapterNumber, problemNumber);
+
+                    solutionList.Move(0);
+                    solution = solutionList.GetAt(0);
+
+                    list = sideBar.ClickMenuItemByText(chapterNumber + "장");
+                    list = sideBar.ClickMenuItemByText("문제 " + problemNumber, list);
+                    sideBar.ClickMenuItemByText("풀이 " + solution.number, list);
+                }
             }
         }
     }
@@ -171,7 +174,7 @@ export class PlayForm extends CompositeWindow {
             menu = `${chapterNumber}장`;
         }
 
-        bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
+        bookmarkCard.Correct(0, bookmarkCard.location, "MENTODESKFORM", "MENTOABILITYFORM", "", "", 0, chapterNumber, 0, 0);
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 
         const indexForm = IndexForm.GetInstance();

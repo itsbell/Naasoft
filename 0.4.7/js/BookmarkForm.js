@@ -20,7 +20,7 @@ export class BookmarkForm extends CompositeWindow {
         this.element.logicalObject = this;
 
         this.element.addEventListener("load", this.OnLoaded.bind(this));
-
+        
         this.bookmarkTable = null;
 
         this.workList = null;
@@ -37,11 +37,14 @@ export class BookmarkForm extends CompositeWindow {
 
     async OnLoaded() {
         const menteeCard = MenteeCard.GetInstance();
+        const applyBook = ApplyBook.GetInstance();
         const playShelf = PlayShelf.GetInstance();
-        const playCase = playShelf.GetAt(playShelf.current);
+        let index = applyBook.FindCurrentCard();
+        const applyCard = applyBook.GetAt(index);
+        index = playShelf.Find(applyCard.courseName, applyCard.stepNumber);
+        const playCase = playShelf.GetAt(index);
         playCase.Reset();
 
-        const applyCard = playCase.applyCard;
         const problemList = playCase.GetAt(0);
         const solutionBook = playCase.GetAt(1);
         const feedbackBook = playCase.GetAt(2);
@@ -153,9 +156,6 @@ export class BookmarkForm extends CompositeWindow {
 
         /** 활동이 없으면 */
         if (workList.length === 0) {
-            const applyBook = ApplyBook.GetInstance();
-            const applyCard = applyBook.GetAt(applyBook.current);
-
             let dayOfWeek = applyCard.time.GetKoreanDayOfWeek();
             let hour = applyCard.time.hour;
             let ampm = "오전";

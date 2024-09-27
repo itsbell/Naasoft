@@ -172,7 +172,7 @@ export class PlayCase extends BusinessObjects {
         if (this._applyCard.isPaid === true) {
             let problemList = this._objects[0];
             let lastProblem = problemList.GetAt(problemList.length - 1);
-            
+
             let solutionBook = this._objects[1];
             let listIndex = solutionBook.Find(lastProblem.chapterNumber, lastProblem.number);
             let finishIndex = -1;

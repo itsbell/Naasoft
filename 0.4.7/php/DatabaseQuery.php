@@ -420,7 +420,8 @@ class GetAllApplyQuery extends DatabaseQuery
     public function Query(...$params)
     {
         $queryResult = $this->connection->query(
-            "SELECT Course.name, Step.number, Apply.time, Payment.orderId, Apply.start, Apply.end FROM Apply 
+            "SELECT Course.name, Step.number, Apply.time, GetApplyState(Apply.applyCode), 
+            Payment.orderId, Apply.start, Apply.end FROM Apply 
             LEFT JOIN Payment ON Payment.applyCode = Apply.applyCode 
             LEFT JOIN Step ON Step.stepCode = Apply.stepCode 
             LEFT JOIN Course ON Course.courseCode = Step.courseCode 
@@ -442,12 +443,12 @@ class GetAllApplyQuery extends DatabaseQuery
             }
 
             $time = new NDateTime($row[2]);
-            $start = new NDateTime($row[4]);
-            $end = new NDateTime($row[5]);
+            $start = new NDateTime($row[5]);
+            $end = new NDateTime($row[6]);
             $apply = new Apply(
                 $time,
-                "DEAD",
-                ($row[3] != null) ? (true) : (false),
+                $row[3],
+                ($row[4] != null) ? (true) : (false),
                 $start,
                 $end
             );
@@ -507,20 +508,21 @@ class GetCurrentApplySolutionsQuery extends DatabaseQuery
     {
         $this->connection->query("CALL GetCodeFromApplyByEmailAddressAndCourseNameAndStepNumber(\"$params[0]\", \"$params[1]\", $params[2], @applyCode)");
         $queryResult = $this->connection->query(
-            "SELECT Solution.time, Solution.chapterNumber, Solution.problemNumber, Solution.number, Solution.content
+            "SELECT Solution.time, GetSolutionState(Solution.solutionCode), 
+            Solution.chapterNumber, Solution.problemNumber, Solution.number, Solution.content
             FROM Solution WHERE Solution.applyCode = @applyCode ORDER BY Solution.time"
         );
 
         $solutionBook = new SolutionBook();
         while ($row = mysqli_fetch_array($queryResult)) {
-            $index = $solutionBook->Find((int)$row[1], (int)$row[2]);
+            $index = $solutionBook->Find((int)$row[2], (int)$row[3]);
             if ($index == -1) {
-                $problem = new Problem((int)$row[1], (int)$row[2], null, null, null);
+                $problem = new Problem((int)$row[2], (int)$row[3], null, null, null);
                 $index = $solutionBook->Add(new SolutionList($problem));
             }
             $solutionList = $solutionBook->GetAt($index);
             $time = new NDateTime($row[0]);
-            $solution = new Solution($time, "WAIT", (int)$row[3], $row[4], null);
+            $solution = new Solution($time, $row[1], (int)$row[4], $row[5], null);
             $solutionList->Add($solution);
         }
         $json = $solutionBook->Expose();

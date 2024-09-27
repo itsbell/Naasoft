@@ -55,8 +55,6 @@ export class ApplyForm extends CompositeWindow {
             let jsonText = JSON.stringify(payment);
             window.top.sessionStorage.setItem("Payment", jsonText);
 
-            window.top.removeEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler);
-
             // 1.1.6. 결제로 이동한다.
             window.top.location.href = "../pay/pay.php";
         }

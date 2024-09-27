@@ -19,6 +19,9 @@ export class MentoCard extends BusinessObjects {
     get time() {
         return this._objects[0].time;
     }
+    set time(time) {
+        this._objects[0].time = time;
+    }
 
     static GetInstance() {
         if (window.top.businessObjects["MENTOCARD"] === undefined) {
@@ -65,13 +68,16 @@ export class Mento extends BusinessObject {
     get time() {
         return this._time;
     }
+    set time(time) {
+        this._time = time;
+    }
 
     SetObject(object) {
         this._name = object._name;
         this._emailAddress = object._emailAddress;
-        
+
         let time = null;
-        if(object._time != null){
+        if (object._time != null) {
             time = new DateTime();
             time.SetObject(object._time);
         }

@@ -45,8 +45,6 @@ export class AtticForm extends CompositeWindow {
 
     async OnLoaded() {
         window.top.document.title = "다락방";
-        window.top.addEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler); // 원래 추가돼있으면 알아서 삭제해준다.
-
         const applyBook = ApplyBook.GetInstance();
 
         // 2. 사이드바를 만든다.
@@ -61,7 +59,6 @@ export class AtticForm extends CompositeWindow {
 
             let bookText;
             let applyCard = applyBook.GetAt(index);
-            console.log("책번호: " + applyCard.stepNumber); // 두 번째 책 결제 후에 안뜨는 오류 찾기
             switch (parseInt(applyCard.stepNumber, 10)) {
                 case 1: bookText = "첫 번째 책"; break;
                 case 2: bookText = "두 번째 책"; break;
@@ -78,7 +75,7 @@ export class AtticForm extends CompositeWindow {
         }
         sideBar.AddSwitchMenu("책갈피", "BOOKMARKFORM", "./bookmark.html");
         sideBar.AddSwitchMenu("성과", "ABILITYFORM", "./ability.html");
-        sideBar.AddActionMenu("100MB 삽입", this.On100MBMenuClicked.bind(this));
+        // sideBar.AddActionMenu("100MB 삽입", this.On100MBMenuClicked.bind(this));
         sideBar.AddSwitchEdgeMenu("퇴거", "LEAVEFORM", "./leave.html");
         sideBar.AddLocation("다락방", "../assets/logo.png");
 
@@ -101,7 +98,6 @@ export class AtticForm extends CompositeWindow {
         else {
             sideBar.ClickEdgeMenuItemByText(text);
         }
-
         this.Add(sideBar);
 
         // 4. SideBar를 보여준다.
@@ -169,8 +165,6 @@ export class AtticForm extends CompositeWindow {
         // 그러나 더더욱 이상하게도 위처럼 Get을 한 번 하고 나서 이동하면 indexedDB가 비워진다.
 
         // 3. 초기로 이동한다.
-        window.top.removeEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler);
-        
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
         frameController.Change("INITIALFORM");

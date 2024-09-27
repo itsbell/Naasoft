@@ -18,11 +18,10 @@ export class EditSolutionForm extends CompositeWindow {
 
         this.element = document.getElementById(this.id);
         this.element.logicalObject = this;
+
         this.element.addEventListener("load", this.OnLoaded.bind(this));
 
         this._isSubmitted = false;
-
-
     }
 
     static GetInstance() {

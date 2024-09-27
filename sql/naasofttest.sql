@@ -851,6 +851,54 @@ END IF;
 RETURN evaluateCode;
 END//
 
+CREATE FUNCTION GetSolutionState(solutionCode CHAR(18)) RETURNS VARCHAR(16)
+BEGIN
+DECLARE state VARCHAR(16);
+DECLARE count INT;
+SET state = "WAIT";
+SELECT COUNT(*) INTO count FROM Feedback WHERE Feedback.solutionCode = solutionCode;
+IF(count > 0) THEN
+    SET state = "PASS";
+END IF;
+SELECT COUNT(*) INTO count FROM Feedback WHERE Feedback.solutionCode = solutionCode AND Feedback.evaluate = -2;
+IF(count > 0) THEN
+    SET state = "FAIL";
+END IF;
+SELECT COUNT(*) INTO count FROM Feedback WHERE Feedback.solutionCode = solutionCode AND Feedback.evaluate = -1;
+IF(count > 0) THEN
+    SET state = "FINISH";
+END IF;
+RETURN state;
+END//
+
+CREATE FUNCTION GetApplyState(applyCode CHAR(18)) RETURNS VARCHAR(16)
+BEGIN
+DECLARE state VARCHAR(16);
+DECLARE paymentCode CHAR(18);
+DECLARE stepCode CHAR(6);
+DECLARE chapterNumber INT;
+DECLARE problemNumber INT;
+DECLARE count INT;
+SET state = "DEAD";
+SELECT Payment.paymentCode INTO paymentCode FROM Apply
+LEFT JOIN Payment ON Payment.applyCode = Apply.applyCode
+WHERE Apply.applyCode = applyCode;
+IF(paymentCode IS NOT NULL) THEN
+    SELECT Apply.stepCode INTO stepCode FROM Apply WHERE Apply.applyCode = applyCode;
+    SELECT Problem.chapterNumber, Problem.number INTO chapterNumber, problemNumber
+        FROM Problem WHERE Problem.stepCode = stepCode ORDER BY Problem.problemCode DESC LIMIT 1;
+    SELECT COUNT(*) INTO count FROM Solution
+        INNER JOIN Apply ON Apply.applyCode = Solution.applyCode
+        WHERE Apply.applyCode = applyCode AND
+        Solution.chapterNumber = chapterNumber AND Solution.problemNumber = problemNumber AND
+        GetSolutionState(Solution.solutionCode) = "FINISH";
+    IF(count < 1) THEN
+        SET state = "ALIVE";
+    END IF;
+END IF;
+RETURN state;
+END//
+
 DELIMITER ;
 
 

@@ -32,6 +32,7 @@ export class AtticForm extends CompositeWindow {
 
     OnLoaded() {
         window.top.document.title = "멘토";
+        window.top.addEventListener("beforeunload", IndexForm.GetInstance()._beforeUnloadedHandler); // 원래 추가돼있으면 알아서 삭제해준다.
 
         // 5. 사이드바를 만든다.
         const sideBar = new SideBar("SIDEBAR");
@@ -59,7 +60,6 @@ export class AtticForm extends CompositeWindow {
     }
 
     async OnSignOutButtonClicked() {
-
         const mentoCard = MentoCard.GetInstance();
         const emailAddress = mentoCard.emailAddress;
         const time = mentoCard.time;

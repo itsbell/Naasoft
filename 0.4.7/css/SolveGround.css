@@ -15,10 +15,13 @@
 
     position: absolute;
     background-color: white;
-    padding: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    display: flex;
+    flex-direction: column;
 
     max-height: 50%;
-    overflow-y: auto;
 
     /* 드래그 시 선택 방지*/
     -webkit-touch-callout: none;
@@ -47,10 +50,13 @@
 
     position: absolute;
     background-color: white;
-    padding: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    display: flex;
+    flex-direction: column;
 
     max-height: 50%;
-    overflow-y: auto;
 
     /* 드래그 시 선택 방지*/
     -webkit-touch-callout: none;
@@ -62,16 +68,6 @@
     user-select: none;
 }
 
-#FEEDBACKLISTCTRL_FOCUS::-webkit-scrollbar {
-    /* Chrome/Safari/Webkit */
-    width: 4px;
-}
-
-#FEEDBACKLISTCTRL_FOCUS::-webkit-scrollbar-thumb {
-    background: rgba(var(--scroll-rgb), 1);
-    border-radius: 10px;
-}
-
 #FEEDBACKLISTCTRL_NONE {
     display: none;
 }
@@ -80,6 +76,22 @@
     cursor: move;
     padding: 4px;
     font-weight: 500;
+}
+
+#FEEDBACKLISTCTRL_BODY {
+    overflow-y: auto;
+    padding-right: 4px;
+    flex-grow: 1;
+}
+
+#FEEDBACKLISTCTRL_BODY::-webkit-scrollbar {
+    /* Chrome/Safari/Webkit */
+    width: 4px;
+}
+
+#FEEDBACKLISTCTRL_BODY::-webkit-scrollbar-thumb {
+    background: rgba(var(--scroll-rgb), 1);
+    border-radius: 10px;
 }
 
 /** FeedbackListCtrl item */
@@ -192,7 +204,9 @@
     width: 400px;
     max-height: 80%;
     background-color: white;
-    padding: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
     position: absolute;
     display: flex;
     flex-direction: column;

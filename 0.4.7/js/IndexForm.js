@@ -2,7 +2,7 @@ import { CompositeWindow } from "./Window.js";
 import { IndexedDB } from "./IndexedDB.js";
 import { CourseList } from "./Course.js";
 import { StepBook } from "./Step.js";
-import { MenteeCard } from "./Mentee.js";
+import { Mentee, MenteeCard } from "./Mentee.js";
 import { ApplyBook } from "./Apply.js";
 import { ProblemList } from "./Problem.js";
 import { SolutionBook } from "./Solution.js";
@@ -17,6 +17,8 @@ import { PhpRequestor } from "./PhpRequestor.js";
 import { Subject } from "./Subject.js";
 import { FrameController } from "./FrameController.js"
 import { HistoryController, HistoryState } from "./Observer.js";
+import { RequestorFactory } from "./RequestorFactory.js";
+import { DateTime } from "./DateTime.js";
 
 export class IndexForm extends CompositeWindow {
     constructor(id) {
@@ -33,7 +35,6 @@ export class IndexForm extends CompositeWindow {
 
         this._frame = null;
         this._subject = null;
-        this._beforeUnloadedHandler = this.OnBeforeUnloaded.bind(this);
     }
 
     get frame() {
@@ -73,7 +74,7 @@ export class IndexForm extends CompositeWindow {
         const mentoCard = MentoCard.GetInstance();
         const menteeInfoList = MenteeInfoList.GetInstance();
 
-        const requestor = new PhpRequestor();
+        const phpRequestor = new PhpRequestor();
 
         // 2. indexedDB를 연다.
         const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
@@ -96,7 +97,7 @@ export class IndexForm extends CompositeWindow {
             mentoCard.SetObject(mentoCardObject);
             // 6. 멘토 카드를 적재했으면
             // 6.1. 서버에 멘티 정보 데이터를 요청한다.
-            let menteeInfoListObject = await requestor.PostJson("./0.4.7/php/GetAllMenteeInfo.php");
+            let menteeInfoListObject = await phpRequestor.PostJson("./0.4.7/php/GetAllMenteeInfo.php");
 
             // 6.2. 멘티 정보 목록에 추가한다.
             menteeInfoList.SetObject(menteeInfoListObject);
@@ -111,7 +112,7 @@ export class IndexForm extends CompositeWindow {
             // 8. 멘티 카드를 적재했으면
             // 8.1. 서버에 신청 데이터를 요청한다.
             let body = `emailAddress=${menteeCard.emailAddress}`;
-            const applyBookObject = await requestor.PostJson("./0.4.7/php/GetAllApply.php", body);
+            const applyBookObject = await phpRequestor.PostJson("./0.4.7/php/GetAllApply.php", body);
 
             // 8.2. 신청 책에 추가한다.
             applyBook.SetObject(applyBookObject, courseList, stepBook);
@@ -128,64 +129,12 @@ export class IndexForm extends CompositeWindow {
             // 8.5. indexedDB에 신청 책을 저장한다.
             await indexedDB.Put("ApplyBook", applyBook);
 
-            const applyCard = applyBook.GetAt(applyBook.current);
-            const courseName = applyCard.courseName;
-            const stepNumber = applyCard.stepNumber;
-
-            index = playShelf.Add(new PlayCase(applyCard));
-            const playCase = playShelf.GetAt(index);
-
-            // 8.6. 서버에 문제 데이터를 요청한다.
-            const problemList = new ProblemList();
-            body = `courseName=${courseName}&stepNumber=${stepNumber}`;
-            const problemListObject = await requestor.PostJson("./0.4.7/php/GetProblems.php", body);
-
-            // 8.7. 문제 목록에 추가한다.
-            problemList.SetObject(problemListObject);
-            playCase.Add(problemList);
-
-            // 8.8. 서버에 풀이 데이터를 요청한다.
-            const solutionBook = new SolutionBook();
-            body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const solutionBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplySolutions.php", body);
-
-            // 8.9. 풀이 책에 추가한다.
-            solutionBook.SetObject(solutionBookObject, problemList);
-            playCase.Add(solutionBook);
-
-            // 8.10. 서버에 피드백 데이터를 요청한다.
-            const feedbackBook = new FeedbackBook();
-            body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const feedbackBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyFeedbacks.php", body);
-
-            // 8.11. 피드백 책에 추가한다.
-            feedbackBook.SetObject(feedbackBookObject, problemList, solutionBook);
-            playCase.Add(feedbackBook);
-
-            // 8.12. 서버에 질문 데이터를 요청한다.
-            const questionBook = new QuestionBook();
-            body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const questionBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyQuestions.php", body);
-
-            // 8.13. 질문 책에 추가한다.
-            questionBook.SetObject(questionBookObject, problemList, solutionBook);
-            playCase.Add(questionBook);
-
-            // 8.14. 서버에 답변 데이터를 요청한다.
-            const answerBook = new AnswerBook();
-            body = `emailAddress=${menteeCard.emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
-            const answerBookObject = await requestor.PostJson("./0.4.7/php/GetCurrentApplyAnswers.php", body);
-
-            // 8.15. 답변 책에 추가한다.
-            answerBook.SetObject(answerBookObject, problemList, solutionBook, questionBook);
-            playCase.Add(answerBook);
-
-            // 8.16. indexedDB에 놀이 책장을 저장한다.
-            await indexedDB.Put("PlayShelf", playShelf);
+            // 
+            this.RequestPlayCase();
 
             // 8.17. 서버에 책갈피 데이터를 요청한다.
             body = `emailAddress=${menteeCard.emailAddress}`;
-            const bookmarkCardObject = await requestor.PostJson("./0.4.7/php/GetBookmark.php", body);
+            const bookmarkCardObject = await phpRequestor.PostJson("./0.4.7/php/GetBookmark.php", body);
 
             // 8.18. 책갈피 카드에 추가한다.
             bookmarkCard.SetObject(bookmarkCardObject);
@@ -201,6 +150,7 @@ export class IndexForm extends CompositeWindow {
         if (this.historyController.state != null) {
             let state = new HistoryState();
             state.SetObject(this.historyController.state);
+
             if (state.childForm != undefined) {
                 if (bookmarkCard.length > 0) {
                     bookmarkCard.Correct(0, bookmarkCard.location, state.childForm, state.grandChildForm, state.type,
@@ -216,6 +166,23 @@ export class IndexForm extends CompositeWindow {
 
                 id = bookmarkCard.childForm;
                 this.historyController.isPushed = true;
+
+                // 성과를 통해 이전 단계를 보다가 새로고침을 눌렀을 때
+                let index = playShelf.Find(bookmarkCard.courseName, bookmarkCard.stepNumber);
+                if (index === -1) {
+                    index = applyBook.Find(bookmarkCard.courseName, bookmarkCard.stepNumber);
+                    if (index != -1) {
+                        applyBook.Move(index);
+                        await indexedDB.Put("ApplyBook", applyBook);
+
+                        this.RequestPlayCase();
+
+                        bookmarkCard.Correct(0, bookmarkCard.location, bookmarkCard.childForm, bookmarkCard.grandChildForm,
+                            bookmarkCard.type, bookmarkCard.courseName, bookmarkCard.stepNumber, -1, 0, 0);
+
+                        await indexedDB.Put("BookmarkCard", bookmarkCard);
+                    }
+                }
             }
         }
         // 9.2. 현재 페이지가 없고, 멘토 카드가 적재되었으면 멘토 다락방으로 이동한다.
@@ -228,6 +195,71 @@ export class IndexForm extends CompositeWindow {
         }
         // 9.4. 현재 페이지가 없고, 멘토 카드가 적재되지 않았고, 멘티 카드가 적재되지 않았으면 초기 페이지로 이동한다.
         frameController.Append(id);
+        
+        setInterval(this.OnIntegrateInterval.bind(this), 60000); // 60 sec
+    }
+
+    async RequestPlayCase() {
+        const menteeCard = MenteeCard.GetInstance();
+        const applyBook = ApplyBook.GetInstance();
+        let applyCard = applyBook.GetAt(applyBook.current);
+        const playShelf = PlayShelf.GetInstance();
+        let index = playShelf.Add(new PlayCase(applyCard));
+        let playCase = playShelf.GetAt(index);
+
+        const MAX = 5;
+        let i = 0;
+        let promise;
+        let promises = [];
+        let requestor;
+        let requestorFactory = new RequestorFactory({ emailAddress: menteeCard.emailAddress, courseName: applyCard.courseName, stepNumber: applyCard.stepNumber });
+        let businessObject;
+
+        while (i < MAX) {
+            switch (i) {
+                case 0: businessObject = new ProblemList(); break;
+                case 1: businessObject = new SolutionBook(); break;
+                case 2: businessObject = new FeedbackBook(); break;
+                case 3: businessObject = new QuestionBook(); break;
+                case 4: businessObject = new AnswerBook(); break;
+                default: break;
+            }
+            playCase.Add(businessObject);
+
+            requestor = requestorFactory.Make(businessObject);
+            promise = requestor.Request();
+            promises.push(promise);
+            i++;
+        }
+
+        let text;
+        let object;
+        let response = await Promise.all(promises);
+        let problemList = playCase.GetAt(0);
+        let solutionBook = playCase.GetAt(1);
+        let feedbackBook = playCase.GetAt(2);
+        let questionBook = playCase.GetAt(3);
+
+        i = 0;
+        while (i < MAX) {
+            businessObject = playCase.GetAt(i);
+            text = await response[i].text();
+            object = JSON.parse(text);
+
+            switch (i) {
+                case 0: problemList.SetObject(object); break;
+                case 1: solutionBook.SetObject(object, problemList); break;
+                case 2: feedbackBook.SetObject(object, problemList, solutionBook); break;
+                case 3: businessObject.SetObject(object, problemList, solutionBook); break;
+                case 4: businessObject.SetObject(object, problemList, solutionBook, questionBook); break;
+                default: break;
+            }
+            i++;
+        }
+
+        const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+        await indexedDB.Put("PlayShelf", playShelf);
     }
 
     async OnPopState(event) {
@@ -257,9 +289,48 @@ export class IndexForm extends CompositeWindow {
         frameController.Change(bookmarkCard.childForm);
     }
 
-    async OnBeforeUnloaded(event) {
-        event.preventDefault();
-        event.returnValue = true;
+    async OnIntegrateInterval() {
+        const mentoCard = MentoCard.GetInstance();
+        const menteeCard = MenteeCard.GetInstance();
+        if (mentoCard.length > 0) {
+            const emailAddress = mentoCard.emailAddress;
+            const time = mentoCard.time;
+
+            const playShelf = PlayShelf.GetInstance();
+            const integratePlayShelf = playShelf.GetMentoIntegrateObject(time);
+            const feedbacksAndAnswers = JSON.stringify(integratePlayShelf);
+
+            // 서버에 데이터 결합을 요청한다.
+            const requestor = new PhpRequestor();
+            let timeString = await requestor.Post("./0.4.7/php/IntegrateMento.php",
+                "emailAddress=" + emailAddress +
+                "&playShelf=" + feedbacksAndAnswers);
+
+            mentoCard.time = new DateTime(timeString);
+        }
+        else if (menteeCard.length > 0) {
+            const emailAddress = menteeCard.emailAddress;
+            const time = menteeCard.time;
+
+            const applyBook = ApplyBook.GetInstance();
+            const integrateApplyBook = applyBook.GetIntegrateObject(time);
+            const applies = JSON.stringify(integrateApplyBook);
+
+            const playShelf = PlayShelf.GetInstance();
+            const integratePlayShelf = playShelf.GetMenteeIntegrateObject(time);
+            const solutionsAndQuestions = JSON.stringify(integratePlayShelf);
+
+            const bookmarkCard = BookmarkCard.GetInstance();
+            const integrateBookmarkCard = bookmarkCard.GetIntegrateObject();
+            const bookmark = JSON.stringify(integrateBookmarkCard);
+            // 서버에 데이터 결합을 요청한다.
+            const requestor = new PhpRequestor();
+            let timeString = await requestor.Post("./0.4.7/php/IntegrateMentee.php",
+                "emailAddress=" + emailAddress +
+                "&applyBook=" + applies + "&playShelf=" + solutionsAndQuestions + "&bookmarkCard=" + bookmark);
+
+            menteeCard.time = new DateTime(timeString);
+        }
     }
 
     async OnKeyDown(event) {

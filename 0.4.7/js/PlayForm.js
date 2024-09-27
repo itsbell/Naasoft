@@ -37,8 +37,6 @@ export class PlayForm extends CompositeWindow {
     }
 
     OnLoaded() {
-        window.top.sessionStorage.setItem("PageId", this.id);
-
         const playShelf = PlayShelf.GetInstance();
         const bookmarkCard = BookmarkCard.GetInstance();
 
@@ -157,12 +155,12 @@ export class PlayForm extends CompositeWindow {
                 if (solutionBook.length > 0) {
                     solutionBook.Move(solutionListIndex);
                     solutionList = solutionBook.GetAt(0);
-                    
+
                     chapterNumber = solutionList.chapterNumber;
                     problemNumber = solutionList.problemNumber;
-                    
+
                     problemList.MoveByChapterNumberAndNumber(chapterNumber, problemNumber);
-                    
+
                     solutionList.Move(0);
                     solution = solutionList.GetAt(0);
 
@@ -182,11 +180,12 @@ export class PlayForm extends CompositeWindow {
         }.bind(this), 30);
     }
 
-    async OnUpButtonClicked() {
+    async OnUpButtonClicked(event) {
         const playShelf = PlayShelf.GetInstance();
         const bookmarkCard = BookmarkCard.GetInstance();
         const playCase = playShelf.GetAt(0);
         const problemList = playCase.GetAt(0);
+
         const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
         await indexedDB.Open();
 
@@ -200,12 +199,28 @@ export class PlayForm extends CompositeWindow {
             menu = `${chapterNumber}장`;
         }
 
-        bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
+        // DeskForm | AbilityForm 어디로 보낼지 구분
+        let count = 0;
+        let childForm = "PLAYFORM";
+        while (childForm === "PLAYFORM") {
+            count = count + 1;
+            window.top.history.back();
+            childForm = window.top.history.state._childForm;
+        }
+        window.top.history.go(count);
+
+        if (childForm === "DESKFORM") {
+            bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
+        }
+        else {
+            bookmarkCard.Correct(0, bookmarkCard.location, "ATTICFORM", "ABILITYFORM", "", "", 0, chapterNumber, 0, 0);
+        }
+
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 
         const indexForm = IndexForm.GetInstance();
         const frameController = new FrameController(indexForm);
-        frameController.Change("DESKFORM");
+        frameController.Change(bookmarkCard.childForm);
     }
 
     OnHelpButtonClicked() {

@@ -86,6 +86,7 @@ export class PhpRequestor {
 
         // 응답 처리
         const text = await result.text();
+        // console.log(text);
         return text;
     }
 

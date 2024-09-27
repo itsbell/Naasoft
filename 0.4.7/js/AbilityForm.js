@@ -37,7 +37,7 @@ export class AbilityForm extends CompositeWindow {
         const playShelf = PlayShelf.GetInstance();
         const playCase = playShelf.GetAt(playShelf.current);
         playCase.Reset();
-        
+
         // 1. 이전 신청 목록을 만든다.
         const stepBook = StepBook.GetInstance();
         const applyBook = ApplyBook.GetInstance();
@@ -230,6 +230,9 @@ export class AbilityForm extends CompositeWindow {
         const id = event.currentTarget.id;
         const stepNumber = parseInt(id.substring(10, id.length), 10);
 
+        const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
+        await indexedDB.Open();
+
         let current = applyBook.FindCurrentCard();
         if (current != -1) {
             let applyCard = applyBook.GetAt(current);
@@ -242,6 +245,9 @@ export class AbilityForm extends CompositeWindow {
             // 2. 신청 책에서 선택된 신청 카드를 찾는다.
             index = applyBook.Find(applyCard.courseName, stepNumber);
             if (index != -1) {
+                applyBook.Move(index);
+                await indexedDB.Put("ApplyBook", applyBook);
+
                 applyCard = applyBook.GetAt(index);
                 const emailAddress = menteeCard.emailAddress;
 
@@ -300,11 +306,9 @@ export class AbilityForm extends CompositeWindow {
                 playShelf.Add(playCase);
 
                 // 12. indexedDB에 놀이 책장을 저장한다.
-                const indexedDB = new IndexedDB("NaasoftBook", window.top.indexedDBVersion);
-                await indexedDB.Open();
                 await indexedDB.Put("PlayShelf", playShelf);
 
-                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", applyCard.courseName, stepNumber, -1, 0, 0);
+                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", applyCard.courseName, applyCard.stepNumber, -1, 0, 0);
                 await indexedDB.Put("BookmarkCard", bookmarkCard);
 
                 // 13. 놀이로 이동한다.
