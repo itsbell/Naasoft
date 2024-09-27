@@ -1319,6 +1319,15 @@ class IntegrateMenteeQuery extends DatabaseQuery
         $bookmarkCard = new BookmarkCard();
         $bookmarkCard->Impose($integrateBookmarkCard);
         $this->IntegrateBookmark($bookmarkCard, $emailAddress);
+
+        $queryResult = $this->connection->query(
+            "SELECT NOW()"
+        );
+        $array = $queryResult->fetch_array();
+        $result = $array[0];
+
+        return $result;
+
     }
 
     private function IntegrateApply($applyBook, $emailAddress)
@@ -1504,6 +1513,14 @@ class IntegrateMentoQuery extends DatabaseQuery
         $playShelf = new PlayShelf();
         $playShelf->ImposeMento($integratePlayShelf);
         $this->IntegratePlay($playShelf, $emailAddress);
+
+        $queryResult = $this->connection->query(
+            "SELECT NOW()"
+        );
+        $array = $queryResult->fetch_array();
+        $result = $array[0];
+
+        return $result;
     }
 
     private function IntegratePlay($playShelf, $emailAddress)

@@ -891,7 +891,7 @@ IF(paymentCode IS NOT NULL) THEN
         INNER JOIN Apply ON Apply.applyCode = Solution.applyCode
         WHERE Apply.applyCode = applyCode AND
         Solution.chapterNumber = chapterNumber AND Solution.problemNumber = problemNumber AND
-        GetSolutionState(Solution.solutionCode) = "FINISH";
+        GetSolutionState(Solution.solutionCode) COLLATE utf8mb4_0900_ai_ci = "FINISH" COLLATE utf8mb4_0900_ai_ci;
     IF(count < 1) THEN
         SET state = "ALIVE";
     END IF;

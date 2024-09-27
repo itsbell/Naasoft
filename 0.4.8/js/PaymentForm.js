@@ -74,9 +74,9 @@ export class PaymentForm extends CompositeWindow {
             orderId: this.payment.orderId,
             orderName: this.payment.orderName,
             // successUrl: window.location.origin + "/pay/paySuccess",
-            successUrl: window.location.origin + "/0.4.7/pay/paySuccess.php",
+            successUrl: window.location.origin + "/0.4.8/pay/paySuccess.php",
             // failUrl: window.location.origin + "/pay/payFail"
-            failUrl: window.location.origin + "/0.4.7/pay/payFail.php"
+            failUrl: window.location.origin + "/0.4.8/pay/payFail.php"
             //customerEmail: "",
             //customerName: "",
             //customerMobilePhone: "01012341234",

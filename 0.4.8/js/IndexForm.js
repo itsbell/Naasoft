@@ -97,7 +97,7 @@ export class IndexForm extends CompositeWindow {
             mentoCard.SetObject(mentoCardObject);
             // 6. 멘토 카드를 적재했으면
             // 6.1. 서버에 멘티 정보 데이터를 요청한다.
-            let menteeInfoListObject = await phpRequestor.PostJson("./0.4.7/php/GetAllMenteeInfo.php");
+            let menteeInfoListObject = await phpRequestor.PostJson(`./${window.top.version}/php/GetAllMenteeInfo.php`);
 
             // 6.2. 멘티 정보 목록에 추가한다.
             menteeInfoList.SetObject(menteeInfoListObject);
@@ -112,7 +112,7 @@ export class IndexForm extends CompositeWindow {
             // 8. 멘티 카드를 적재했으면
             // 8.1. 서버에 신청 데이터를 요청한다.
             let body = `emailAddress=${menteeCard.emailAddress}`;
-            const applyBookObject = await phpRequestor.PostJson("./0.4.7/php/GetAllApply.php", body);
+            const applyBookObject = await phpRequestor.PostJson(`./${window.top.version}/php/GetAllApply.php`, body);
 
             // 8.2. 신청 책에 추가한다.
             applyBook.SetObject(applyBookObject, courseList, stepBook);
@@ -134,7 +134,7 @@ export class IndexForm extends CompositeWindow {
 
             // 8.17. 서버에 책갈피 데이터를 요청한다.
             body = `emailAddress=${menteeCard.emailAddress}`;
-            const bookmarkCardObject = await phpRequestor.PostJson("./0.4.7/php/GetBookmark.php", body);
+            const bookmarkCardObject = await phpRequestor.PostJson(`./${window.top.version}/php/GetBookmark.php`, body);
 
             // 8.18. 책갈피 카드에 추가한다.
             bookmarkCard.SetObject(bookmarkCardObject);
@@ -302,7 +302,7 @@ export class IndexForm extends CompositeWindow {
 
             // 서버에 데이터 결합을 요청한다.
             const requestor = new PhpRequestor();
-            let timeString = await requestor.Post("./0.4.7/php/IntegrateMento.php",
+            let timeString = await requestor.Post(`./${window.top.version}/php/IntegrateMento.php`,
                 "emailAddress=" + emailAddress +
                 "&playShelf=" + feedbacksAndAnswers);
 
@@ -325,7 +325,7 @@ export class IndexForm extends CompositeWindow {
             const bookmark = JSON.stringify(integrateBookmarkCard);
             // 서버에 데이터 결합을 요청한다.
             const requestor = new PhpRequestor();
-            let timeString = await requestor.Post("./0.4.7/php/IntegrateMentee.php",
+            let timeString = await requestor.Post(`./${window.top.version}/php/IntegrateMentee.php`,
                 "emailAddress=" + emailAddress +
                 "&applyBook=" + applies + "&playShelf=" + solutionsAndQuestions + "&bookmarkCard=" + bookmark);
 

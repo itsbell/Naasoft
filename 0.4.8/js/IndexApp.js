@@ -1,5 +1,6 @@
 import { IndexForm } from "./IndexForm.js";
 
+window.top.version = "0.4.8";
 window.top.indexedDBVersion = "202409061110";
 window.top.businessObjects = [];
 

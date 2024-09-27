@@ -61,7 +61,7 @@ export class Requestor {
 export class ApplyRequestor extends Requestor {
     constructor(emailAddress) {
         super();
-        this._link = "./0.4.7/php/GetAllApply.php";
+        this._link = `./${window.top.version}/php/GetAllApply.php`;
         this._body = `emailAddress=${emailAddress}`;
     }
 }
@@ -69,7 +69,7 @@ export class ApplyRequestor extends Requestor {
 export class ProblemRequestor extends Requestor {
     constructor(courseName, stepNumber) {
         super();
-        this._link = "./0.4.7/php/GetProblems.php";
+        this._link = `./${window.top.version}/php/GetProblems.php`;
         this._body = `courseName=${courseName}&stepNumber=${stepNumber}`;
     }
 }
@@ -77,7 +77,7 @@ export class ProblemRequestor extends Requestor {
 export class SolutionRequestor extends Requestor {
     constructor(emailAddress, courseName, stepNumber) {
         super();
-        this._link = "./0.4.7/php/GetCurrentApplySolutions.php";
+        this._link = `./${window.top.version}/php/GetCurrentApplySolutions.php`;
         this._body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
     }
 }
@@ -85,7 +85,7 @@ export class SolutionRequestor extends Requestor {
 export class FeedbackRequestor extends Requestor {
     constructor(emailAddress, courseName, stepNumber) {
         super();
-        this._link = "./0.4.7/php/GetCurrentApplyFeedbacks.php";
+        this._link = `./${window.top.version}/php/GetCurrentApplyFeedbacks.php`;
         this._body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
     }
 }
@@ -93,7 +93,7 @@ export class FeedbackRequestor extends Requestor {
 export class QuestionRequestor extends Requestor {
     constructor(emailAddress, courseName, stepNumber) {
         super();
-        this._link = "./0.4.7/php/GetCurrentApplyQuestions.php";
+        this._link = `./${window.top.version}/php/GetCurrentApplyQuestions.php`;
         this._body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
     }
 }
@@ -101,7 +101,7 @@ export class QuestionRequestor extends Requestor {
 export class AnswerRequestor extends Requestor {
     constructor(emailAddress, courseName, stepNumber) {
         super();
-        this._link = "./0.4.7/php/GetCurrentApplyAnswers.php";
+        this._link = `./${window.top.version}/php/GetCurrentApplyAnswers.php`;
         this._body = `emailAddress=${emailAddress}&courseName=${courseName}&stepNumber=${stepNumber}`;
     }
 }
