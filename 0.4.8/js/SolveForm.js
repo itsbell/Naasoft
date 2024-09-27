@@ -257,11 +257,12 @@ export class SolveForm extends CompositeWindow {
             // 책갈피의 정보에 따라 피드백 또는 질문답변을 열다.
             if (bookmarkCard.type === "Feedback") {
                 solutionView.ClickFeedback();
+                bookmarkCard.type = "";
             }
             else if (bookmarkCard.type == "Question" || bookmarkCard.type == "Answer") {
                 solutionView.ClickQnA();
+                bookmarkCard.type = "";
             }
-            bookmarkCard.type = "";
             await indexedDB.Put("BookmarkCard", bookmarkCard);
 
             if (courseName === "다락방 1층" && stepNumber === 1 &&

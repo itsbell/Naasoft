@@ -308,7 +308,7 @@ export class AbilityForm extends CompositeWindow {
                 // 12. indexedDB에 놀이 책장을 저장한다.
                 await indexedDB.Put("PlayShelf", playShelf);
 
-                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "", applyCard.courseName, applyCard.stepNumber, -1, 0, 0);
+                bookmarkCard.Correct(0, bookmarkCard.location, "PLAYFORM", "SOLVEFORM", "Entire", applyCard.courseName, applyCard.stepNumber, -1, 0, 0);
                 await indexedDB.Put("BookmarkCard", bookmarkCard);
 
                 // 13. 놀이로 이동한다.

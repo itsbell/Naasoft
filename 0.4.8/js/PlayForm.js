@@ -180,7 +180,7 @@ export class PlayForm extends CompositeWindow {
         }.bind(this), 30);
     }
 
-    async OnUpButtonClicked(event) {
+    async OnUpButtonClicked() {
         const playShelf = PlayShelf.GetInstance();
         const bookmarkCard = BookmarkCard.GetInstance();
         const playCase = playShelf.GetAt(0);
@@ -200,21 +200,14 @@ export class PlayForm extends CompositeWindow {
         }
 
         // DeskForm | AbilityForm 어디로 보낼지 구분
-        let count = 0;
-        let childForm = "PLAYFORM";
-        while (childForm === "PLAYFORM") {
-            count = count + 1;
-            window.top.history.back();
-            childForm = window.top.history.state._childForm;
-        }
-        window.top.history.go(count);
+        let childForm = "DESKFORM";
+        let grandChildForm = "STUDYFORM";
 
-        if (childForm === "DESKFORM") {
-            bookmarkCard.Correct(0, bookmarkCard.location, "DESKFORM", "STUDYFORM", "", "", 0, chapterNumber, 0, 0);
+        if (bookmarkCard.type === "Entire") {
+            childForm = "ATTICFORM";
+            grandChildForm = "ABILITYFORM";
         }
-        else {
-            bookmarkCard.Correct(0, bookmarkCard.location, "ATTICFORM", "ABILITYFORM", "", "", 0, chapterNumber, 0, 0);
-        }
+        bookmarkCard.Correct(0, bookmarkCard.location, childForm, grandChildForm, "", "", 0, chapterNumber, 0, 0);
 
         await indexedDB.Put("BookmarkCard", bookmarkCard);
 

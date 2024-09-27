@@ -331,10 +331,9 @@ export class SolveGround {
         if (solveGround.current != null &&
             (solveGround.current.className === "feedbackItem" || solveGround.current.className === "feedbackItem_focus")) {
             const listCtrl = solveGround.listCtrl.element;
-            const listBody = solveGround.listCtrl.body;
-            let left = listCtrl.offsetLeft + listBody.offsetLeft;
+            let left = listCtrl.offsetLeft;
             let right = left + listCtrl.offsetWidth;
-            let top = listCtrl.offsetTop + listBody.offsetTop;
+            let top = listCtrl.offsetTop;
             let bottom = top + listCtrl.offsetHeight;
             if (event.clientX > left && event.clientX < right &&
                 event.clientY > top && event.clientY < bottom) {
@@ -356,9 +355,9 @@ export class SolveGround {
             (solveGround.current.className === "feedbackItem" || solveGround.current.className === "feedbackItem_focus")) {
             const listCtrl = solveGround.listCtrl.element;
             const listBody = solveGround.listCtrl.body;
-            let left = listCtrl.offsetLeft + listBody.offsetLeft;
+            let left = listCtrl.offsetLeft;
             let right = left + listCtrl.offsetWidth;
-            let top = listCtrl.offsetTop + listBody.offsetTop;
+            let top = listCtrl.offsetTop;
             let bottom = top + listCtrl.offsetHeight;
             if (event.clientX > left && event.clientX < right &&
                 event.clientY > top && event.clientY < bottom) {
